@@ -9,7 +9,7 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Piercing Damage--> @PDMG ← (if #2 = "Booming Blade" ∨ #2 = "Green Flame Blade" ∨ #2 = "Shortbow" ∨ #2 = "Shortsword" then #9 ← (if @X = 20 then 2 else 1 end). (#9d6 + @DEX) end). <!--Sneak Attack--> @PDMG ← (if #3 = 1 then #9 ← (if @X = 20 then (2 x @SNEAKATK((@LVL))) else @SNEAKATK((@LVL)) end). (@PDMG + #9d6) else @PDMG end).<!--Thunder Damage--> @THDMG ← (if #2 = "Booming Blade" ∧ @LVL &gt; 4 then #9 ← (if @LVL &lt; 11 then if @X = 20 then 2 else 1 end elif @LVL &lt; 17 then if @X = 20 then 4 else 2 end else if @X = 20 then 6 else 3 end end). #9Ad8 else 0 end). <!--Fire Damage--> @FIDMG ← (if #2 = "Green Flame Blade" ∧ @LVL &gt; 4 then #9 ← (if @LVL &lt; 11 then if @X = 20 then 2 else 1 end elif @LVL &lt; 17 then if @X = 20 then 4 else 2 end else if @X = 20 then 6 else 3 end end). #9Od8 else 0 end). <!--Necrotic Damage--> @NDMG ← (if #4 = 1 then #9 ← (if @X = 20 then 2 else 1 end). #9Kd6 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((@X)) end) + @ATKDMG((@PDMG,@THDMG,@FIDMG,@NDMG)) + <!--Green Flame Blade Rider--> (if #2 = "Green Flame Blade" then "     Fire:" + (if @LVL &lt; 5 then @CHA elif @LVL &gt; 4 then #9 ← (if @LVL &lt; 11 then 1 elif @LVL &lt; 17 then 2 else 3 end). (#9Gd8 + @CHA) else "" end) + "to adjacent creature" end</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ← (@DICECALC((#2,@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Booming Blade" ∨ #2 = "Green Flame Blade" ∨ #2 = "Shortbow" ∨ #2 = "Shortsword" then (#9d6 + @DEX) end).<!--Sneak Attack--> @PDMG ← (if #3 = 1 then #9 ← (@DICECALC(("Sneak Attack",@X))). (@PDMG + #9d6) else @PDMG end). <!--Thunder Damage--> @THDMG ← (if #2 = "Booming Blade" ∧ @LVL &gt; 4 then #9 ← (@DICECALC(("Booming Blade Rider",@X))). #9Ad8 else 0 end). <!--Fire Damage--> @FIDMG ← (if #2 = "Green Flame Blade" ∧ @LVL &gt; 4 then #9 ← (@DICECALC(("Green Flame Blade Rider",@X))). #9Od8 else 0 end). <!--Necrotic Damage--> @NDMG ← (if #4 = 1 then #9Kd6 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((@X)) end) + @ATKDMG((@PDMG,@THDMG,@FIDMG,@NDMG)) + (if #2 = "Green Flame Blade" then "Fire:" + (if @LVL &lt; 5 then @CHA else #9 ← (@DICECALC(("Green Flame Blade Adjacent",0))). (#9Gd8 + @CHA) end) + "to adjacent creature" else "" end) end</formula>
 		<name>Attacks</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter style="enum" name="Weapon" default="Booming Blade" enums="Booming Blade,Green Flame Blade,Shortbow,Shortsword,Dagger"/>
@@ -18,7 +18,7 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ← (if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end). "Thunder:" + #9Ad8</formula>
+		<formula>#9 ← (@DICECALC(("Cantrip",0))). "Thunder:" + #9Ad8</formula>
 		<name>Booming Blade Movement</name>
 	</roll>
 	<roll>
@@ -68,8 +68,8 @@
 	<function name="ATKROLL">"ATK:" + (#1 + @DEX + @PROF)</function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
-	<!--#1 = Rogue Level-->
-	<function name="SNEAKATK">#1 - (#1 / 2)</function>
+	<!--#1 = Attack Name, #2 = Roll/Level-->
+	<function name="DICECALC">if #1 = "Booming Blade" ∨ #1 = "Green Flame Blade" ∨ #1 = "Shortbow" ∨ #1 = "Shortsword" ∨ #1 = "Hex" then if #2 = 20 then 2 else 1 end elif #1 = "Sneak Attack" then if #2 = 20 then (2 x (@LVL - (@LVL / 2))) else (@LVL - (@LVL / 2)) end elif #1 = "Booming Blade Rider" ∨ #1 = "Green Flame Blade Rider" then if @LVL &lt; 11 then if #2 = 20 then 2 else 1 end elif @LVL &lt; 17 then if #2 = 20 then 4 else 2 end else if #2 = 20 then 6 else 3 end end elif #1 = "Cantrip" if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end <!--Green Flame Blade Adjacent--> else if @LVL &lt; 11 then 1 elif @LVL &lt; 17 then 2 else 3 end end</function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
 	<function name="CHACHECK">#1 + ":" + (if #1 = "Deception" then (#2 + @CHA + @PROF) else (#2 + @CHA) end)</function>
