@@ -11,8 +11,7 @@
 		<parameter style="bool" name="Familiar"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) elif @X = 20 then @WDMG ← (if #2 = "Rapier" then (2d8 + @DEX) else 0 end). @FDMG ← (if #2 = "Firebolt" then #9 ← (2 x @MAGICDICE((@LVL))). #9Od10 else 0 end). @CRITICAL((#2,@X)) + @ATKDMG((#2,@WDMG,@FDMG)) else @X ← (if #3 = 0 then @X else (@X + Wd4) end). @WDMG ← (if #2 = "Rapier" then (d8 + @DEX) else 0 end). @FDMG ← (if #2 = "Firebolt" then #9 ← @MAGICDICE((@LVL)). #9Od10 else 0 end). @ATKROLL((#2,@X)) + @ATKDMG((#2,@WDMG,@FDMG)) end
-		</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then #9 ← (if @X = 20 then 2 else 1 end). (#9d8 + @DEX) else 0 end). <!--Fire Damage--> @FDMG ← (if #2 = "Firebolt" then #9 ← (if @X = 20 then (2 x @MAGICDICE((@LVL))) else @MAGICDICE((@LVL)) end). #9Od10 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) + @ATKDMG((#2,@PDMG,@FDMG)) end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter style="enum" name="Attack" default="Firebolt" enums="Firebolt,Rapier"/>
