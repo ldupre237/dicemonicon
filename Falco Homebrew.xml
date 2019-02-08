@@ -8,7 +8,7 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then #9 ← (if @X = 20 then 2 else 1 end). (#9d8 + @DEX) else 0 end). <!--Bashing Damage--> @BDMG ← (if #2 = "Sling" then #9 ← (if @X = 20 then 2 else 1 end). (#9d4 + @DEX) else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@PDMG,@BDMG)) end</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then (#9d8 + @DEX) else 0 end). <!--Bashing Damage--> @BDMG ← (if #2 = "Sling" then (#9d4 + @DEX) else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@PDMG,@BDMG)) end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter style="enum" name="Attack" default="Rapier" enums="Rapier,Sling"/>
@@ -70,6 +70,8 @@
 	<function name="ATKROLL">"ATK:" + (#2 + @DEX + @PROF)</function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
+	<!--#1 = Roll-->
+	<function name="DICECALC">if #1 = 20 then 2 else 1 end</function>
 	<!--#1 = Spell Level-->
 	<function name="MAGICDICE">if #1 &lt; 5 then 1 elif #1 &lt; 11 then 2 elif #1 &lt; 17 then 3 else 4 end</function>
 	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @CHA) </function>
