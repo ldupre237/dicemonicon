@@ -8,19 +8,19 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then (#9d8 + @DEX) else 0 end). <!--Bashing Damage--> @BDMG ← (if #2 = "Sling" then (#9d4 + @DEX) else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@PDMG,@BDMG)) end</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then (#9d8 + @DEX) else 0 end). <!--Bashing Damage--> @BDMG ← (if #2 = "Sling" then (#9d4 + @DEX) else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@PDMG,@BDMG)) end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter style="enum" name="Attack" default="Rapier" enums="Rapier,Sling"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ← (@MAGICDICE((@LVL))). “Psychic: ” + #9Bd4 + "WIS" + @SAVEDC(()) + "Neg" 
+		<formula>#9 ← (@DICECALC(("Cantrip",@LVL))). “Psychic: ” + #9Bd4 + "WIS" + @SAVEDC(()) + "Neg" 
 		</formula>
 		<name>Vicious Mockery</name>
 	</roll>
 	<roll>
-		<formula>if #1 = "Dissonant Whispers" then #9 ← (#2 + 2). "Psychic:" + #9Bd6 + "WIS" + @SAVEDC(()) + "Half" elif #1 = "Sleep" then #9 ← (3 + (#2 x 2)). "HP Affected:" + #9Cd8 else #9 ← (#2). "HP Healed:" + (#9Wd4 + @CHA) end</formula>
+		<formula>if #1 = "Dissonant Whispers" then #9 ← (@DICECALC(("Dissonant Whispers",#2))). "Psychic:" + #9Bd6 + "WIS" + @SAVEDC(()) + "Half" elif #1 = "Sleep" then #9 ← (@DICECALC(("Sleep",#2))). "HP Affected:" + #9Cd8 else #9 ← (#2). "HP Healed:" + (#9Wd4 + @CHA) end</formula>
 		<name>Spells (Level Dependent)</name>
 		<parameter name="Spell" style="enum" default="Dissonant Whispers" enums="Dissonant Whispers,Healing Word,Sleep"/>
 		<parameter style="number" default="1" name="Spell Level"/>
@@ -28,14 +28,8 @@
 	<roll>
 		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "Athletics" then @STRCHECK((#1,@X)) elif #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then @DEXCHECK((#1,@X)) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "Investigation" ∨ #1 ="Nature" ∨ #1 = "Religion" then @INTCHECK((#1,@X)) elif #1 = "Animal Handling" ∨ #1 = "Insight" ∨ #1 = "Medicine" ∨ #1 ="Perception" ∨ #1 = "Survival" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end</formula>
 		<name>Skills</name>
-		<parameter style="enum" name="Skills" default="Acrobatics" enums="Acrobatics,Animal Handling,Arcana,Athletics,Deception,History,Insight,Intimidation,Investigation,Medicine,Nature,Perception,Performance,Persuasion,Religion,Sleight of Hand,Stealth,Survival,Thieves Tools"/>
+		<parameter style="enum" name="Skills" default="Perception" enums="Acrobatics,Animal Handling,Arcana,Athletics,Deception,History,Insight,Intimidation,Investigation,Medicine,Nature,Perception,Performance,Persuasion,Religion,Sleight of Hand,Stealth,Survival,Thieves Tools"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>	
-		<parameter style="bool" name="Guidance"/>
-	</roll>
-	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end). @WISCHECK(("Perception",@X))</formula>
-		<name>Perception</name>
-		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
@@ -70,10 +64,9 @@
 	<function name="ATKROLL">"ATK:" + (#2 + @DEX + @PROF)</function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
-	<!--#1 = Roll-->
-	<function name="DICECALC">if #1 = 20 then 2 else 1 end</function>
-	<!--#1 = Spell Level-->
-	<function name="MAGICDICE">if #1 &lt; 5 then 1 elif #1 &lt; 11 then 2 elif #1 &lt; 17 then 3 else 4 end</function>
+		<!--#1 = Attack, #2 = Roll-->
+	<!--#1 = Attack Name, #2 = Roll/Level-->
+	<function name="DICECALC">if #1 = "Rapier" ∨ #1 = "Sling" then if #2 = 20 then 2 else 1 end elif #1 = "Cantrip" then if #2 &lt; 5 then 1 elif #2 &lt; 11 then 2 elif #2 &lt; 17 then 3 else 4 end elif #1 = "Dissonant Whispers" then (#2 + 2) <!--Sleep--> else (3 + (#2 x 2)) end</function>
 	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @CHA) </function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
