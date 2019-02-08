@@ -8,7 +8,7 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Piercing Damage--> @PDMG ← (if #2 = "Longbow" then if @X = 20 then (2d8 + @DEX + @BOWBONUS + 2) else (d8 + @DEX + @BOWBONUS + 2) end elif #2 = "Dagger" then if @X = 20 then (2d4 + @DEX) else (d4 + @DEX) end else 0 end). <!--Slashing Damage--> @SDMG ← (if #2 = "Whip" then if @X = 20 then (2d4 + @DEX) else (d4 + @DEX) end elif #2 = "Scimitar" then if @X = 20 then (2d6 + @DEX) else (d6 + @DEX) end else 0 end). <!--SS Damage--> @PDMG ← (if #2 = "Longbow" ∧ #3 = "1" then (@PDMG + 10) else @PDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #4 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,#3,@X)) end) + @ATKDMG((@PDMG,@SDMG)) end</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Piercing Damage--> @PDMG ← (if #2 = "Longbow" then #9 ← (if @X = 20 then 2 else 1 end). (#9d8 + @DEX + @BOWBONUS + 2) elif #2 = "Dagger" then #9 ← (if @X = 20 then 2 else 1 end). (#9d4 + @DEX) else 0 end). <!--Slashing Damage--> @SDMG ← (if #2 = "Whip" then #9 ← (if @X = 20 then 2 else 1 end). (#9d4 + @DEX) elif #2 = "Scimitar" then #9 ← (if @X = 20 then 2 else 1 end). (#9d6 + @DEX) else 0 end). <!--SS Damage--> @PDMG ← (if #2 = "Longbow" ∧ #3 = "1" then (@PDMG + 10) else @PDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #4 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,#3,@X)) end) + @ATKDMG((@PDMG,@SDMG)) end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter style="enum" name="Attack" default="Longbow" enums="Longbow,Whip,Scimitar,Dagger"/>
@@ -16,8 +16,7 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>"Piercing:" + (if #1 = 1 then 2d8 else d8 end) + "DC:" + (8 + @DEX + @PROF)
-		</formula>
+		<formula>#9 ←(if #1 = 1 then 2 else 1 end). "Extra Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())</formula>
 		<name>Superiority Die</name>
 		<parameter style="bool" name="Crit" default="0"/>
 	</roll>
@@ -29,14 +28,8 @@
 	<roll>
 		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "Athletics" then @STRCHECK((#1,@X)) elif #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then @DEXCHECK((#1,@X)) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "Investigation" ∨ #1 ="Nature" ∨ #1 = "Religion" then @INTCHECK((#1,@X)) elif #1 = "Animal Handling" ∨ #1 = "Insight" ∨ #1 = "Medicine" ∨ #1 ="Perception" ∨ #1 = "Survival" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end</formula>
 		<name>Skills</name>
-		<parameter style="enum" name="Skills" default="Acrobatics" enums="Acrobatics,Animal Handling,Arcana,Athletics,Deception,History,Insight,Intimidation,Investigation,Medicine,Nature,Perception,Performance,Persuasion,Religion,Sleight of Hand,Stealth,Survival,Thieves Tools"/>
+		<parameter style="enum" name="Skills" default="Perception" enums="Acrobatics,Animal Handling,Arcana,Athletics,Deception,History,Insight,Intimidation,Investigation,Medicine,Nature,Perception,Performance,Persuasion,Religion,Sleight of Hand,Stealth,Survival,Thieves Tools"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>	
-		<parameter style="bool" name="Guidance"/>
-	</roll>
-	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end). @WISCHECK(("Perception",@X))</formula>
-		<name>Perception</name>
-		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
@@ -73,6 +66,7 @@
 	<function name="ATKROLL">"ATK:" + (if #2 = "1" ∧ #1 = "Longbow" then (#3 + @DEX + @PROF + @BOWBONUS + 2 - 5) elif #1 = "Longbow" then (#3 + @DEX + @PROF + @BOWBONUS + 2) else (#3 + @DEX + @PROF) end) </function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
+	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @DEX) </function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
 	<function name="CHACHECK">#1 + ":" + (if #1 = "Deception" then (#2 + @CHA + @PROF) else (#2 + @CHA) end)</function>
