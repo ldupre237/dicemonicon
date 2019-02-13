@@ -2,34 +2,28 @@
 <gameroom inherit="Default" name="Shuti DnDAL">
 	<!--Favorite Rolls-->
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end).  @DEXCHECK(("Initiative",@X))</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end). @DEXCHECK(("Initiative",@X))</formula>
 		<name>Initiative</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else  @SDMG ← (if #2 = "Dagger" then (if @X = 20 then (2d4 + @DEX) else (d4 + @DEX) end) else 0 end).  @FDMG ← (if #2 = "Firebolt" then (if @X = 20 then #9 ← (2 x @MAGICDICE((@LVL))) else #9 ← (@MAGICDICE((@LVL))) end). #9Od10MIN2 elif #2 = "Scorching Ray" then (if @X = 20 then 4Od6MIN2 else 2Od6MIN2 end) else 0 end).  @LDMG ← (if #2 = "Shocking Grasp" then (if @X = 20 then #9 ← (2 x @MAGICDICE((@LVL))) else #9 ← (@MAGICDICE((@LVL))) end). #9Bd8 else 0 end).  (if @X = 20 then @CRITICAL((#2,@X)) else  @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@SDMG,@FDMG,@LDMG)) end</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else #9 ←(@DICECALC((#2,@X))). @SDMG ← (if #2 = "Dagger" then (#9d4 + @DEX) else 0 end). @FDMG ← (if #2 = "Firebolt" then #9Od10MIN2 elif #2 = "Scorching Ray" then #9Od6MIN2 else 0 end). @LDMG ← (if #2 = "Shocking Grasp" then #9Bd8 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@SDMG,@FDMG,@LDMG)) end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter name="Attack" style="enum" default="Firebolt" enums="Firebolt,Scorching Ray,Shocking Grasp,Dagger"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>if #1 = "Poison Spray" then #9 ← (@MAGICDICE((@LVL))). "Poison:" + #9Gd12 + "CON" + @SAVEDC(()) + "Neg" elif #1 = "Counterspell" then @S ← (d20 + @CHA). #9 ← (if #2 &lt; 3 then 3 else #2 end). "CHA Check:" + @S + "Spell Level Countered:" + (if (@S - 10) &lt; #9 then #9 elif (@S - 10) &lt; 9 then (@S - 10) else "9" end) elif #1 = "Fireball" then #9 ← (if #2 &lt; 3 then 8 else (#2 + 5) end). "Fire: " + (#9Od6MIN2 + @CHA) + "DEX" + @SAVEDC(()) + "Half" else #9 ← (#2 + 2). @Y ← #9d4@ + 1. @Y, "Total:" + (sum((@Y))) end</formula>
+		<formula>#9 ←(@DICECALC((#1,#2))). if #1 = "Poison Spray" then "Poison:" + #9Gd12 + "CON" + @SAVEDC(()) + "Neg" elif #1 = "Counterspell" then @S ← (d20 + @CHA). #9 ← (if #2 &lt; 3 then 3 else #2 end). "CHA Check:" + @S + "Spell Level Countered:" + (if (@S - 10) &lt; #9 then #9 elif (@S - 10) &lt; 9 then (@S - 10) else "9" end) elif #1 = "Fireball" then "Fire: " + (#9Od6MIN2 + @CHA) + "DEX" + @SAVEDC(()) + "Half" else @Y ← #9d4@ + 1. @Y, "Total:" + (sum((@Y))) end</formula>
 		<name>Spells</name>
 		<parameter name="Spell" style="enum" default="Counterspell" enums="Counterspell,Fireball,Magic Missile,Poison Spray"/>
 		<parameter style="number" default="1" name="Spell Level"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end). @WISCHECK(("Perception",@X))</formula>
-		<name>Perception</name>
-		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage"/>
-		<parameter style="bool" name="Guidance"/>
-	</roll>
-	<roll>
 		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "Athletics" then @STRCHECK((#1,@X)) else if #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then @DEXCHECK((#1,@X)) else if #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "Investigation" ∨ #1 ="Nature" ∨ #1 = "Religion" then @INTCHECK((#1,@X)) else if #1 = "Animal Handling" ∨ #1 = "Insight" ∨ #1 = "Medicine" ∨ #1 ="Perception" ∨ #1 = "Survival" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end</formula>
 		<name>Skills</name>
-		<parameter name="Skills" style="enum" default="Acrobatics" enums="Acrobatics,Animal Handling,Arcana,Athletics,Deception,History,Insight,Intimidation,Investigation,Medicine,Nature,Perception,Performance,Persuasion,Religion,Sleight of Hand,Stealth,Survival,Thieves Tools"/>
+		<parameter name="Skills" style="enum" default="Perception" enums="Acrobatics,Animal Handling,Arcana,Athletics,Deception,History,Insight,Intimidation,Investigation,Medicine,Nature,Perception,Performance,Persuasion,Religion,Sleight of Hand,Stealth,Survival,Thieves Tools"/>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
 	</roll>
@@ -65,17 +59,20 @@
 	<variable kind="number" name="WIS">1</variable>
 	<variable kind="number" name="CHA">4</variable>
 	<!--User Functions-->
-	<function name="STRCHECK">#1 + ":" + (#2 + @STR)</function>
-	<function name="DEXCHECK">#1 + ":" + (#2 + @DEX)</function>
-	<function name="CRITICAL">if #2 = 1 then "Critical Miss!" + (if #1 = "Dagger" then "\$Swoosh$" else "\$Bah$" end) else "Crit!" + (if #1 = "Dagger" then "\$Clang$" else "\$Gong$" end) end</function>
-	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON +@PROF) else (#2 + @CON) end)</function>
-	<function name="CHACHECK">#1 + ":" + (if #1 = "Persuasion" ∨ #1 = "CHA Save" then (#2 + @CHA + @PROF) else (#2 + @CHA) end)</function>
-	<function name="ATKROLL">"ATK:" + (if #1 = "Dagger" then (#2 + @DEX + @PROF) else (#2 + @CHA + @PROF) end)</function>
-	<function name="MAGICDICE">if #1 &lt; 5 then 1 elif #1 &lt; 11 then 2 elif #1 &lt; 17 then 3 else 4 end</function>
+	<!--Attack Functions-->
 	<function name="ATKDMG">(if #1 &gt; 0 then "Slashing:" + #1 else "" end) + (if #2 &gt; 0 then "Fire:" + (#2 + @CHA) else "" end) + (if #3 &gt; 0 then "Lightning:" + #3 else "" end)</function>
+	<function name="ATKROLL">"ATK:" + (if #1 = "Dagger" then (#2 + @DEX + @PROF) else (#2 + @CHA + @PROF) end)</function>
+	<function name="CRITICAL">if #2 = 1 then "Critical Miss!" + (if #1 = "Dagger" then "\$Swoosh$" else "\$Bah$" end) else "Crit!" + (if #1 = "Dagger" then "\$Clang$" else "\$Gong$" end) end</function>
+	<!--#1 = Attack Name, #2 = Roll/Level-->
+	<function name="DICECALC">if #1 = "Dagger" then if #2 = 20 then 2 else 1 end elif #1 = "Scorching Ray" then if #2 = 20 then 4 else 2 end elif #1 = "Magic Missile" then (#2 + 2) elif #1 = "Fireball" then if #2 &lt; 3 then 8 else (#2 + 5) end else <!--Cantrips--> if #2 = 20 then if @LVL &lt; 5 then 2 elif @LVL &lt; 11 then 4 elif @LVL &lt; 17 then 6 else 8 end else if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end end end </function>
 	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @CHA)</function>
-	<function name="WISCHECK">#1 + ":" + (if #1 = "Insight" ∨ #1 = "Perception" then (#2 + @WIS + @PROF) else (#2 + @WIS) end)</function>
+	<!--Ability Checks-->
+	<function name="CHACHECK">#1 + ":" + (if #1 = "Persuasion" ∨ #1 = "CHA Save" then (#2 + @CHA + @PROF) else (#2 + @CHA) end)</function>
+	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON +@PROF) else (#2 + @CON) end)</function>
+	<function name="DEXCHECK">#1 + ":" + (#2 + @DEX)</function>
 	<function name="INTCHECK">#1 + ":" + (if #1 = "Arcana" then (#2 + @INT + @PROF) else (#2 + @INT) end)</function>
+	<function name="STRCHECK">#1 + ":" + (#2 + @STR)</function>
+	<function name="WISCHECK">#1 + ":" + (if #1 = "Insight" ∨ #1 = "Perception" then (#2 + @WIS + @PROF) else (#2 + @WIS) end)</function>
 	<!--Current Effects-->
 	<!--Props-->
 </gameroom>
