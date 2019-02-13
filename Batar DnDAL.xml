@@ -2,13 +2,13 @@
 <gameroom inherit="Default" name="Batar DnDAL">
 	<!--Favorite Rolls-->
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end).  @DEXCHECK(("Initiative",@X))</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end). @DEXCHECK(("Initiative",@X))</formula>
 		<name>Initiative</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Piercing Damage--> @PDMG ← (if #2 = "Longbow" then #9 ← (if @X = 20 then 2 else 1 end). (#9d8 + @DEX + @BOWBONUS + 2) elif #2 = "Dagger" then #9 ← (if @X = 20 then 2 else 1 end). (#9d4 + @DEX) else 0 end). <!--Slashing Damage--> @SDMG ← (if #2 = "Whip" then #9 ← (if @X = 20 then 2 else 1 end). (#9d4 + @DEX) elif #2 = "Scimitar" then #9 ← (if @X = 20 then 2 else 1 end). (#9d6 + @DEX) else 0 end). <!--SS Damage--> @PDMG ← (if #2 = "Longbow" ∧ #3 = "1" then (@PDMG + 10) else @PDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #4 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,#3,@X)) end) + @ATKDMG((@PDMG,@SDMG)) end</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Longbow" then (#9d8 + @DEX + @BOWBONUS + 2) elif #2 = "Dagger" then (#9d4 + @DEX) else 0 end). <!--Slashing Damage--> @SDMG ← (if #2 = "Whip" then (#9d4 + @DEX) elif #2 = "Scimitar" then (#9d6 + @DEX) else 0 end). <!--SS Damage--> @PDMG ← (if #2 = "Longbow" ∧ #3 = "1" then (@PDMG + 10) else @PDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #4 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,#3,@X)) end) + @ATKDMG((@PDMG,@SDMG)) end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter style="enum" name="Attack" default="Longbow" enums="Longbow,Whip,Scimitar,Dagger"/>
@@ -16,9 +16,9 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ←(if #1 = 1 then 2 else 1 end). "Extra Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())</formula>
+		<formula>#9 ← (if #1 = 1 then @DICECALC((20)) else @DICECALC((10)) end). "Extra Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())</formula>
 		<name>Superiority Die</name>
-		<parameter style="bool" name="Crit" default="0"/>
+		<parameter style="bool" name="Crit" default="1"/>
 	</roll>
 	<roll>
 		<formula>"HP Healed:" + (d10 + @FIGHTERLVL)
@@ -38,7 +38,6 @@
 		<parameter style="enum" name="Stat" default="STR Save" enums="STR Save,DEX Save,CON Save,INT Save,WIS Save,CHA Save"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Bless"/>
-		
 	</roll>
 	<roll>
 		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "STR Check" then @STRCHECK((#1,@X)) elif #1 = "DEX Check" then @DEXCHECK((#1,@X)) elif #1 = "CON Check" then @CONCHECK((#1,@X)) elif #1 = "INT Check" then @INTCHECK((#1,@X)) elif #1 = "WIS Check" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end</formula>
@@ -66,6 +65,8 @@
 	<function name="ATKROLL">"ATK:" + (if #2 = "1" ∧ #1 = "Longbow" then (#3 + @DEX + @PROF + @BOWBONUS + 2 - 5) elif #1 = "Longbow" then (#3 + @DEX + @PROF + @BOWBONUS + 2) else (#3 + @DEX + @PROF) end) </function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
+	<!--#1 = Roll-->
+	<function name="DICECALC">if #1 = 20 then 2 else 1 end</function>
 	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @DEX) </function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
