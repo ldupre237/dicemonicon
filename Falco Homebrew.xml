@@ -2,7 +2,7 @@
 <gameroom inherit="Default" name="Falco Homebrew">
 	<!--Favorite Rolls-->
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end).  @DEXCHECK(("Initiative",@X))</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4 end). @DEXCHECK(("Initiative",@X))</formula>
 		<name>Initiative</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
@@ -44,8 +44,7 @@
 		<name>Ability Checks</name>
 		<parameter style="enum" name="Stat" default="STR Check" enums="STR Check,DEX Check,CON Check,INT Check,WIS Check,CHA Check"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
-		<parameter style="bool" name="Guidance"/>
-		
+		<parameter style="bool" name="Guidance"/>	
 	</roll>
 	<!--User Globals-->
 	<variable kind="number" name="CHA">3</variable>
@@ -64,7 +63,6 @@
 	<function name="ATKROLL">"ATK:" + (#2 + @DEX + @PROF)</function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
-		<!--#1 = Attack, #2 = Roll-->
 	<!--#1 = Attack Name, #2 = Roll/Level-->
 	<function name="DICECALC">if #1 = "Rapier" ∨ #1 = "Sling" then if #2 = 20 then 2 else 1 end elif #1 = "Cantrip" then if #2 &lt; 5 then 1 elif #2 &lt; 11 then 2 elif #2 &lt; 17 then 3 else 4 end elif #1 = "Dissonant Whispers" then (#2 + 2) <!--Sleep--> else (3 + (#2 x 2)) end</function>
 	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @CHA) </function>
