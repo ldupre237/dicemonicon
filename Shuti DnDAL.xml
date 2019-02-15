@@ -15,7 +15,7 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ←(@DICECALC((#1,#2))). if #1 = "Poison Spray" then "Poison:" + #9Gd12 + "CON" + @SAVEDC(()) + "Neg" elif #1 = "Counterspell" then @S ← (d20 + @CHA). #9 ← (if #2 &lt; 3 then 3 else #2 end). "CHA Check:" + @S + "Spell Level Countered:" + (if (@S - 10) &lt; #9 then #9 elif (@S - 10) &lt; 9 then (@S - 10) else "9" end) elif #1 = "Fireball" then "Fire: " + (#9Od6MIN2 + @CHA) + "DEX" + @SAVEDC(()) + "Half" else @Y ← #9d4@ + 1. @Y, "Total:" + (sum((@Y))) end</formula>
+		<formula>#9 ←(@DICECALC((#1,#2))). if #1 = "Poison Spray" then "Poison:" + #9Gd12 + "CON" + @SAVEDC(()) + "Neg" elif #1 = "Counterspell" then @COUNTERSPELL((#2.d20)) elif #1 = "Fireball" then "Fire: " + (#9Od6MIN2 + @CHA) + "DEX" + @SAVEDC(()) + "Half" else @Y ← #9d4@ + 1. @Y, "Total:" + (sum((@Y))) end</formula>
 		<name>Spells</name>
 		<parameter name="Spell" style="enum" default="Counterspell" enums="Counterspell,Fireball,Magic Missile,Poison Spray"/>
 		<parameter style="number" default="1" name="Spell Level"/>
@@ -62,6 +62,8 @@
 	<!--Attack Functions-->
 	<function name="ATKDMG">(if #1 &gt; 0 then "Slashing:" + #1 else "" end) + (if #2 &gt; 0 then "Fire:" + (#2 + @CHA) else "" end) + (if #3 &gt; 0 then "Lightning:" + #3 else "" end)</function>
 	<function name="ATKROLL">"ATK:" + (if #1 = "Dagger" then (#2 + @DEX + @PROF) else (#2 + @CHA + @PROF) end)</function>
+	<!--#1 = Spell Level, #2 = d20 Roll-->
+	<function name="COUNTERSPELL">@S ← (#2 + @CHA). #9 ← (if #1 &lt; 3 then 3 else #2 end). "CHA Check:" + @S + "Spell Level Countered:" + (if (@S - 10) &gt; 9 then 9 elif (@S - 10) &lt; #1 then #1 else (@S - 10) end)</function>
 	<function name="CRITICAL">if #2 = 1 then "Critical Miss!" + (if #1 = "Dagger" then "\$Swoosh$" else "\$Bah$" end) else "Crit!" + (if #1 = "Dagger" then "\$Clang$" else "\$Gong$" end) end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level-->
 	<function name="DICECALC">if #1 = "Dagger" then if #2 = 20 then 2 else 1 end elif #1 = "Scorching Ray" then if #2 = 20 then 4 else 2 end elif #1 = "Magic Missile" then (#2 + 2) elif #1 = "Fireball" then if #2 &lt; 3 then 8 else (#2 + 5) end else <!--Cantrips--> if #2 = 20 then if @LVL &lt; 5 then 2 elif @LVL &lt; 11 then 4 elif @LVL &lt; 17 then 6 else 8 end else if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end end end </function>
