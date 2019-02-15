@@ -86,7 +86,7 @@
 	<!--#1 = Weapon Attack, #2 = Roll-->
 	<function name="ATKROLL">"ATK:" + (if #1 = "Rapier" then (#2 + @DEX) else (#2 + @INT + @PROF) end)</function>
 	<!--#1 = Spell Level, #2 = d20 Roll-->
-	<function name="COUNTERSPELL">@S ← (#2 + @INT). #9 ← (if #1 &lt; 3 then 3 else #2 end). "INT Check:" + @S + "Spell Level Countered:" + (if (@S - 10) &lt; #9 then #9 elif (@S - 10) &lt; 9 then (@S - 10) else "9" end)</function>
+	<function name="COUNTERSPELL">@S ← (#2 + @INT). #9 ← (if #1 &lt; 3 then 3 else #2 end). "INT Check:" + @S + "Spell Level Countered:" + (if (@S - 10) &gt; 9 then 9 elif (@S - 10) &lt; #1 then #1 else (@S - 10) end)</function>
 	<!--#1 = Weapon Attack, #2 = Roll-->
 	<function name="CRITICAL">if #2 = 20 then "Crit!" + (if #1 = "Rapier" then "\$Clang$" else "\$Gong$" end) else "Critical Miss!" + (if #1 = "Rapier" then "\$Swoosh$" else "\$Bah$" end) end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level-->
