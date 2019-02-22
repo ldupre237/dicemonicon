@@ -8,15 +8,16 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Longbow" then (#9d8 + @DEX + @BOWBONUS + 2) elif #2 = "Dagger" then (#9d4 + @DEX) else 0 end). <!--Slashing Damage--> @SDMG ← (if #2 = "Whip" then (#9d4 + @DEX) elif #2 = "Scimitar" then (#9d6 + @DEX) else 0 end). <!--SS Damage--> @PDMG ← (if #2 = "Longbow" ∧ #3 = "1" then (@PDMG + 10) else @PDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #4 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,#3,@X)) end) + @ATKDMG((@PDMG,@SDMG)) end</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Longbow" then (#9d8 + @DEX + @BOWBONUS + 2) elif #2 = "Dagger" then (#9d4 + @DEX) else 0 end). <!--Slashing Damage--> @SDMG ← (if #2 = "Whip" then (#9d4 + @DEX) elif #2 = "Scimitar" then (#9d6 + @DEX) else 0 end). <!--Sneak Attack--> @PDMG ← (if (#2 = "Dagger" ∨ #2 = "Longbow") ∧ #4 = 1 then #9 ← (@DICECALC(("Sneak Attack",@X))). (@PDMG + #9d6) else @PDMG end). @SDMG ← (if (#2 = "Scimitar" ∨ #2 = "Whip") ∧ #4 = 1 then #9 ← (@DICECALC(("Sneak Attack",@X))). (@SDMG + #9d6) else @SDMG end). <!--SS Damage--> @PDMG ← (if #2 = "Longbow" ∧ #3 = "1" then (@PDMG + 10) else @PDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,#3,@X)) end) + @ATKDMG((@PDMG,@SDMG)) end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter style="enum" name="Attack" default="Longbow" enums="Longbow,Whip,Scimitar,Dagger"/>
 		<parameter style="bool" default="1" name="Sharpshooter"/>
+		<parameter style="bool" default = "1" name="Sneak Attack"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ← (if #1 = 1 then @DICECALC((20)) else @DICECALC((10)) end). "Extra Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())</formula>
+		<formula>#9 ← (if #1 = 1 then @DICECALC((20)) else @DICECALC(("SD",10)) end). "Extra Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())</formula>
 		<name>Superiority Die</name>
 		<parameter style="bool" name="Crit" default="1"/>
 	</roll>
@@ -54,28 +55,30 @@
 	<variable kind="number" name="DEX">5</variable>
 	<variable kind="number" name="FIGHTERLVL">6</variable>
 	<variable kind="number" name="INT">-1</variable>
-	<variable kind="number" name="PROF">3</variable>
+	<variable kind="number" name="LVL">7</variable>
+	<variable kind="number" name="ROGUELVL">1</variable>
 	<variable kind="number" name="STR">0</variable>
 	<variable kind="number" name="WIS">2</variable>
 	<!--User Functions-->
 	<!--Attack Functions-->
 	<!--#1 = Piercing Damage, #2 = Slashing Damage-->
 	<function name="ATKDMG">(if #1 &gt; 0 then "Piercing:" + #1 else "" end) + (if #2 &gt; 0 then "Slashing:" + #2 else "" end) </function>
-		<!--#1 = Weapon Type, #2 = SS, #3 = Roll-->
-	<function name="ATKROLL">"ATK:" + (if #2 = "1" ∧ #1 = "Longbow" then (#3 + @DEX + @PROF + @BOWBONUS + 2 - 5) elif #1 = "Longbow" then (#3 + @DEX + @PROF + @BOWBONUS + 2) else (#3 + @DEX + @PROF) end) </function>
+	<!--#1 = Weapon Type, #2 = SS, #3 = Roll-->
+	<function name="ATKROLL">"ATK:" + (if #2 = "1" ∧ #1 = "Longbow" then (#3 + @DEX + @PROF + @BOWBONUS + 2 - 5) elif #1 = "Longbow" then (#3 + @DEX + @PROF + @BOWBONUS + 2) else (#3 + @DEX + @PROF(())) end) </function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
-	<!--#1 = Roll-->
-	<function name="DICECALC">if #1 = 20 then 2 else 1 end</function>
-	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @DEX) </function>
+	<!--#1 = Attack, #2 = Roll-->
+	<function name="DICECALC">if #1 = "Sneak Attack" then if #2 = 20 then (2 x (@ROGUELVL - (@ROGUELVL / 2)) else (@ROGUELVL - (@ROGUELVL / 2)) end else if #1 = 20 then 2 else 1 end end</function>
+	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
+	<function name="SAVEDC">"Save DC:" + (8 + @PROF(()) + @DEX) </function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
-	<function name="CHACHECK">#1 + ":" + (if #1 = "Deception" then (#2 + @CHA + @PROF) else (#2 + @CHA) end)</function>
-	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON + @PROF) else (#2 + @CON) end)</function>
- 	<function name="DEXCHECK">#1 + ":" + (if #1 = "Acrobatics" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then (#2 + @DEX + @PROF) else (#2 + @DEX) end)</function>
-	<function name="STRCHECK">#1 + ":" + (if #1 = "STR Save" then (#2 + @STR + @PROF) else (#2 + @STR) end)</function>
-	<function name="INTCHECK">#1 + ":" + (#2 + @INT)</function>
-	<function name="WISCHECK">#1 + ":" + (if #1 = "Animal Handling" ∨ #1 = "Perception" then (#2 + @WIS + @PROF) else (#2 + @WIS) end)</function>
+	<function name="CHACHECK">#1 + ":" + (if #1 = "Deception" then (#2 + @CHA + @PROF(())) else (#2 + @CHA) end)</function>
+	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON + @PROF(())) else (#2 + @CON) end)</function>
+ 	<function name="DEXCHECK">#1 + ":" + (if #1 = "Acrobatics" ∨ #1 = "Thieves Tools" then (#2 + @DEX + @PROF(())) elif #1 = "Stealth" then (#2 + @DEX + (2 x @PROF(())))) else (#2 + @DEX) end)</function>
+	<function name="STRCHECK">#1 + ":" + (if #1 = "STR Save" then (#2 + @STR + @PROF(())) else (#2 + @STR) end)</function>
+	<function name="INTCHECK">#1 + ":" + (if #1 = "Investigation" then (#2 + @WIS + (2 x @PROF(())))) else (#2 + @WIS) end)</function>
+	<function name="WISCHECK">#1 + ":" + (if #1 = "Animal Handling" ∨ #1 = "Perception" then (#2 + @WIS + @PROF(())) else (#2 + @WIS) end)</function>
 	<!--Current Effects-->
 	<dicebar title="(Bar)">
 		<die>D20</die>
