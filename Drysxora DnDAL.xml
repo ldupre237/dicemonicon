@@ -64,7 +64,7 @@
 		<parameter style="bool" name="Steed"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #4 = 0 then if #3 = 1 then (@X + @STCON + @CHA) else (@X + @CON + @CHA) end else if #3 = 1 then (@X + @STCON + @CHA + Wd4) else (@X + @CON + @CHA + Wd4) end end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S &lt; @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #4 = 0 then if #3 = 1 then (@X + @STCON + @CHA) else (@X + @CON + @CHA) end else if #3 = 1 then (@X + @STCON + @CHA + Wd4) else (@X + @CON + @CHA + Wd4) end end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S ≤ @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
 		<name>Concentration Check</name>
 		<parameter style="number" default="20" name="Damage Amount"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
