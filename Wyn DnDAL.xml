@@ -36,14 +36,14 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then (@X + @CON + @PROF(())) else (@X + Wd4 + @CON + @PROF(())) end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S &lt; @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then (@X + @PROF(()) + @CON + @CHA) else (@X + Wd4 + @PROF(()) + @CON + @CHA) end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S ≤ @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
 		<name>Concentration Check</name>
 		<parameter style="number" default="20" name="Damage Amount"/>
 		<parameter style="enum" name="Roll" default="Advantage" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #4 = 0 then @X else (@X + Wd4) end). if #1 = "STR Save" then @STRCHECK((#3,#1,@X)) elif #1 = "DEX Save" then @DEXCHECK((#3,#1,@X)) elif #1 = "CON Save" then @CONCHECK((#3,#1,@X)) elif #1 = "INT Save" then @INTCHECK((#3,#1,@X)) elif #1 = "WIS Save" then @WISCHECK((#3,#1,@X)) else @CHACHECK((#3,#1,@X)) end
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #4 = 0 then (@X + @CHA) else (@X + Wd4 + @CHA) end). if #1 = "STR Save" then @STRCHECK((#3,#1,@X)) elif #1 = "DEX Save" then @DEXCHECK((#3,#1,@X)) elif #1 = "CON Save" then @CONCHECK((#3,#1,@X)) elif #1 = "INT Save" then @INTCHECK((#3,#1,@X)) elif #1 = "WIS Save" then @WISCHECK((#3,#1,@X)) else @CHACHECK((#3,#1,@X)) end
 		</formula>
 		<name>Saving Throws</name>
 		<parameter style="enum" name="Stat" default="STR Save" enums="STR Save,DEX Save,CON Save,INT Save,WIS Save,CHA Save"/>
@@ -65,7 +65,7 @@
 	<variable kind="number" name="CON">2</variable>
 	<variable kind="number" name="DEX">0</variable>
 	<variable kind="number" name="INT">-1</variable>
-	<variable kind="number" name="LVL">5</variable>
+	<variable kind="number" name="LVL">6</variable>
 	<variable kind="number" name="STR">3</variable>
 	<variable kind="number" name="SWORDBONUS">1</variable>
 	<variable kind="number" name="WIS">1</variable>
