@@ -89,7 +89,7 @@
 	<!--#1 = Attack Name, #2 = Roll/Level-->
 	<function name="DICECALC">if #1 = "Rapier" then @CRITCALC((#2,1)) elif #1 = "Magic Missile" then (#2 + 2) elif #1 = "Firebolt" ∨ #1 = "Toll the Dead" then if @LVL &lt; 5 then @CRITCALC((#2,1)) elif @LVL &lt; 11 then @CRITCALC((#2,2)) elif @LVL &lt; 17 then @CRITCALC((#2,3)) else @CRITCALC((#2,4)) end elif #1 = "Fireball" then if #2 &lt; 4 then 8 elif #2 &gt; 8 then 14 else (#2 + 5) end elif #1 = "Flaming Sphere" then if #2 &lt; 3 then 2 elif #2 &gt; 8 then 9 else #2 end else <!--Sleep--> (3 + (#2 x 2)) end</function>
 	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
-	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @INT) </function>
+	<function name="SAVEDC">"Save DC:" + (8 + @PROF(()) + @INT) </function>
 	<!--Ability Checks-->
 	<!--#1 = Ability ,#2 = Character, #3 = Roll-->
 	<function name="STRCHECK">#1 + ":" + (if #2 = 1 then (#3 + @FSTR) else (#3 + @STR) end)</function>
