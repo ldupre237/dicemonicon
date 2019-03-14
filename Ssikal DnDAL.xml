@@ -26,6 +26,10 @@
 		<parameter style="bool" default="0" name="Crit"/>
 	</roll>
 	<roll>
+		<formula>#9 ←(@DICECALC(("Cantrip",10))). "Poison:" + #9Gd12 + "CON" + @SAVEDC(("CHA")) + "Neg"</formula>
+		<name>Poison Spray</name>
+	</roll>
+	<roll>
 		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "Athletics" then @STRCHECK((#1,@X)) elif #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then @DEXCHECK((#1,@X)) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "Investigation" ∨ #1 ="Nature" ∨ #1 = "Religion" then @INTCHECK((#1,@X)) elif #1 = "Animal Handling" ∨ #1 = "Insight" ∨ #1 = "Medicine" ∨ #1 ="Perception" ∨ #1 = "Survival" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end
 		</formula>
 		<name>Skills</name>
@@ -77,7 +81,7 @@
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level, #3 = Spell Level-->
-	<function name="DICECALC">if #1 = "Thunderous Smite" then @CRITCALC((#2,2)) elif #1 = "Searing Smite" then if #3 &gt; 4 then @CRITCALC((#2,5)) else @CRITCALC((#2,#3)) end else @CRITCALC((#2,1)) end</function>
+	<function name="DICECALC">if #1 = "Thunderous Smite" then @CRITCALC((#2,2)) elif #1 = "Cantrip" then if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end elif #1 = "Searing Smite" then if #3 &gt; 4 then @CRITCALC((#2,5)) else @CRITCALC((#2,#3)) end else @CRITCALC((#2,1)) end</function>
 	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
 	<!--#1 = Stat-->
 	<function name="SAVEDC">"Save DC:" + (8 + (@PROF(()) + @CHA) end))</function>
