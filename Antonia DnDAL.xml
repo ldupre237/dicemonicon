@@ -11,16 +11,11 @@
 		<parameter style="bool" name="Familiar"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else #9 ← (@DICECALC((#2,@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then (#9d8 + @DEX) else 0 end). <!--Fire Damage--> @FDMG ← (if #2 = "Firebolt" then #9Od10 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((@X)) end) + @ATKDMG((#2,@PDMG,@FDMG)) end</formula>
+		<formula>if #2 = "Toll the Dead" then #9 ← (@DICECALC(("Toll the Dead",10))). “Necrotic: ” + (if #1 = 0 then #9Kd8 else #9Kd12 end) + "WIS" + @SAVEDC(()) + "Neg" else @X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else #9 ← (@DICECALC((#2,@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then (#9d8 + @DEX) else 0 end). <!--Fire Damage--> @FDMG ← (if #2 = "Firebolt" then #9Od10 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((@X)) end) + @ATKDMG((#2,@PDMG,@FDMG)) end end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
-		<parameter style="enum" name="Attack" default="Firebolt" enums="Firebolt,Rapier"/>
+		<parameter style="enum" name="Attack" default="Firebolt" enums="Firebolt,Rapier,Toll the Dead"/>
 		<parameter style="bool" name="Bless"/>
-	</roll>
-	<roll>
-		<formula>#9 ← (@DICECALC(("Toll the Dead",10))). “Necrotic: ” + (if #1 = 0 then #9Kd8 else #9Kd12 end) + "WIS" + @SAVEDC(()) + "Neg"</formula>
-		<name>Toll the Dead</name>
-		<parameter style="bool" name="Damaged?"/>
 	</roll>
 	<roll>
 		<formula>if #1 = "Counterspell" then @COUNTERSPELL((#2,d20)) else #9 ← (@DICECALC((#1,#2))). if #1 = "Magic Missile" then @Y ← #9d4@ + 1. @Y, "Total:" + (sum((@Y))) elif #1 = "Sleep" then "HP Affected:" + #9Cd8 else <!--Fireball/Flaming Sphere--> "Fire:" + #9Od6 + "DEX" + @SAVEDC(()) + "Half" end</formula>
@@ -68,9 +63,9 @@
 	<variable kind="number" name="DEX">1</variable>
 	<variable kind="number" name="INT">4</variable>
 	<variable kind="number" name="LVL">5</variable>
-	<variable kind="number" name="PROF">3</variable>
 	<variable kind="number" name="STR">-1</variable>
 	<variable kind="number" name="WIS">1</variable>
+	<variable kind="number" name="WIZARDLVL">5</variable>
 	<!--Familiar Variables-->
 	<variable kind="number" name="FCHA">-2</variable>
 	<variable kind="number" name="FCON">-1</variable>
@@ -84,22 +79,25 @@
 	<!--#1 = Weapon Type, #2 = Weapon Damage, #3 = Fire Damage-->
 	<function name="ATKDMG">if #1 = "Firebolt" then "Fire:" + #3 <!--Rapier--> else "Piercing:" + #2 end</function>
 	<!--#1 = Weapon Attack, #2 = Roll-->
-	<function name="ATKROLL">"ATK:" + (if #1 = "Rapier" then (#2 + @DEX) else (#2 + @INT + @PROF) end)</function>
+	<function name="ATKROLL">"ATK:" + (if #1 = "Rapier" then (#2 + @DEX) else (#2 + @PROF(()) + @INT) end)</function>
 	<!--#1 = Spell Level, #2 = d20 Roll-->
 	<function name="COUNTERSPELL">@S ← (#2 + @INT). #9 ← (if #1 &lt; 3 then 3 else #2 end). "INT Check:" + @S + "Spell Level Countered:" + (if (@S - 10) &gt; 9 then 9 elif (@S - 10) &lt; #1 then #1 else (@S - 10) end)</function>
+	<!--#1 = Roll,#2 = Value-->
+	<function name="CRITCALC">if #1 = 20 then (2 x #2) else #2 end</function>
 	<!--#1 = Weapon Attack, #2 = Roll-->
 	<function name="CRITICAL">if #2 = 20 then "Crit!" + (if #1 = "Rapier" then "\$Clang$" else "\$Gong$" end) else "Critical Miss!" + (if #1 = "Rapier" then "\$Swoosh$" else "\$Bah$" end) end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level-->
-	<function name="DICECALC">if #1 = "Rapier" then if #2 = 20 then 2 else 1 end elif #1 = "Magic Missile" then (#2 + 2) elif #1 = "Firebolt" ∨ #1 = "Toll the Dead" then if #2 = 20 then if @LVL &lt; 5 then 2 elif @LVL &lt; 11 then 4 elif @LVL &lt; 17 then 6 else 8 end else if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end end elif #1 = "Fireball" then if #2 &lt; 3 then 8 else (#2 + 5) end elif #1 = "Flaming Sphere" then if #2 &lt; 2 then 2 else #2 end else <!--Sleep--> (3 + (#2 x 2)) end</function>
+	<function name="DICECALC">if #1 = "Rapier" then @CRITCALC((#2,1)) elif #1 = "Magic Missile" then (#2 + 2) elif #1 = "Firebolt" ∨ #1 = "Toll the Dead" then if @LVL &lt; 5 then @CRITCALC((#2,1)) elif @LVL &lt; 11 then @CRITCALC((#2,2)) elif @LVL &lt; 17 then @CRITCALC((#2,3)) else @CRITCALC((#2,4)) end elif #1 = "Fireball" then if #2 &lt; 4 then 8 elif #2 &gt; 8 then 14 else (#2 + 5) end elif #1 = "Flaming Sphere" then if #2 &lt; 3 then 2 elif #2 &gt; 8 then 9 else #2 end else <!--Sleep--> (3 + (#2 x 2)) end</function>
+	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
 	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @INT) </function>
 	<!--Ability Checks-->
 	<!--#1 = Ability ,#2 = Character, #3 = Roll-->
 	<function name="STRCHECK">#1 + ":" + (if #2 = 1 then (#3 + @FSTR) else (#3 + @STR) end)</function>
 	<function name="DEXCHECK">#1 + ":" + (if #2 = 1 ∧ #1 = "Stealth" then (#3 + @FDEX + @FPROF) elif #2 = 1 then (#3 + @FDEX) else (#3 + @DEX) end)</function>
 	<function name="CONCHECK">#1 + ":" + (if #2 = 1 then (#3 + @FCON) else (#3 + @CON) end)</function>
-	<function name="INTCHECK">#1 + ":" + (if #2 = 1 then (#3 + @FINT) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "INT Save" then (#3 + @INT + @PROF) else (#3 + @INT) end)</function>
-	<function name="WISCHECK">#1 + ":" + (if #2 = 1 ∧ #1 = "Perception" then (#3 + @FWIS + @FPROF) elif #2 = 1 then (#3 + @FWIS) elif #1 = "Insight" ∨ #1 = "WIS Save" then (#3 + @WIS + @PROF) else (#3 + @WIS) end)</function>
-	<function name="CHACHECK">#1 + ":" + (if #2 = 1 then (#3 + @FCHA) elif #1 = "Deception" ∨ #1 = "Persuasion" then (#3 + @CHA + @PROF) else (#3 + @CHA) end)</function>
+	<function name="INTCHECK">#1 + ":" + (if #2 = 1 then (#3 + @FINT) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "INT Save" then (#3 + @PROF(()) + @INT) else (#3 + @INT) end)</function>
+	<function name="WISCHECK">#1 + ":" + (if #2 = 1 ∧ #1 = "Perception" then (#3 + @FWIS + @FPROF) elif #2 = 1 then (#3 + @FWIS) elif #1 = "Insight" ∨ #1 = "WIS Save" then (#3 + @PROF(()) + @WIS) else (#3 + @WIS) end)</function>
+	<function name="CHACHECK">#1 + ":" + (if #2 = 1 then (#3 + @FCHA) elif #1 = "Deception" ∨ #1 = "Persuasion" then (#3 + @PROF(()) + @CHA) else (#3 + @CHA) end)</function>
 	<!--Current Effects-->
 	<dicebar title="(Bar)">
 		<die>D20</die>
