@@ -58,26 +58,29 @@
 	<variable kind="number" name="DEX">3</variable>
 	<variable kind="number" name="INT">-1</variable>
 	<variable kind="number" name="LVL">2</variable>
-	<variable kind="number" name="PROF">2</variable>
+	<variable kind="number" name="ROGUELVL">2</variable>
 	<variable kind="number" name="STR">0</variable>
 	<variable kind="number" name="WIS">1</variable>
 	<!--User Functions-->
 	<!--#1 = Piercing Damage, #2 = Thunder Damage, #3 = Fire Damage, #4 = Necrotic Damage-->
 	<function name="ATKDMG">("Piercing:" + #1) + (if #2 &gt; 0 then "Thunder:" + #2 else "" end) + (if #3 &gt; 0 then "Fire:" + #3 else "" end) + (if #4 &gt; 0 then "Necrotic:" + #4 else "" end) + (if #2 &gt; 0 ∨ #3 &gt; 0 ∨ #4 &gt; 0 then "Total:" + (#1 + #2 + #3 + #4) else "" end)</function>
 	<!--#1 = Roll-->
-	<function name="ATKROLL">"ATK:" + (#1 + @DEX + @PROF)</function>
+	<function name="ATKROLL">"ATK:" + (#1 + @PROF(()) + @DEX)</function>
+	<!--#1 = Roll,#2 = Value-->
+	<function name="CRITCALC">if #1 = 20 then (2 x #2) else #2 end</function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level-->
-	<function name="DICECALC">if #1 = "Booming Blade" ∨ #1 = "Green Flame Blade" ∨ #1 = "Shortbow" ∨ #1 = "Shortsword" ∨ #1 = "Hex" then if #2 = 20 then 2 else 1 end elif #1 = "Sneak Attack" then if #2 = 20 then (2 x (@LVL - (@LVL / 2))) else (@LVL - (@LVL / 2)) end elif #1 = "Booming Blade Rider" ∨ #1 = "Green Flame Blade Rider" then if @LVL &lt; 11 then if #2 = 20 then 2 else 1 end elif @LVL &lt; 17 then if #2 = 20 then 4 else 2 end else if #2 = 20 then 6 else 3 end end elif #1 = "Cantrip" if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end <!--Green Flame Blade Adjacent--> else if @LVL &lt; 11 then 1 elif @LVL &lt; 17 then 2 else 3 end end</function>
+	<function name="DICECALC">if #1 = "Booming Blade" ∨ #1 = "Green Flame Blade" ∨ #1 = "Shortbow" ∨ #1 = "Shortsword" ∨ #1 = "Hex" then @CRITCALC((#2,1)) elif #1 = "Sneak Attack" then @CRITCALC((#2,(@ROGUELVL - (@ROGUELVL / 2)))) elif #1 = "Booming Blade Rider" ∨ #1 = "Green Flame Blade Rider" then if @LVL &lt; 11 then @CRITCALC((#2,1)) elif @LVL &lt; 17 then @CRITCALC((#2,2)) else @CRITCALC((#2,3)) end elif #1 = "Cantrip" if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end <!--Green Flame Blade Adjacent--> else if @LVL &lt; 11 then 1 elif @LVL &lt; 17 then 2 else 3 end end</function>
+	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
-	<function name="CHACHECK">#1 + ":" + (if #1 = "Deception" then (#2 + @CHA + @PROF) else (#2 + @CHA) end)</function>
+	<function name="CHACHECK">#1 + ":" + (if #1 = "Deception" then (#2 + @PROF(()) + @CHA) else (#2 + @CHA) end)</function>
 	<function name="CONCHECK">#1 + ":" + (#2 + @CON)</function>
-	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" ∨ #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then (#2 + @DEX + @PROF) else (#2 + @DEX) end) </function>
-	<function name="INTCHECK">#1 + ":" + (if #1 = "Investigation" then (#2 + @INT + (2 x @PROF)) else (#2 + @INT) end) </function>
-	<function name="STRCHECK">#1 + ":" + (if #1 = "Athletics" then (#2 + @STR + @PROF) else (#2 + @STR) end)</function>
-	<function name="WISCHECK">#1 + ":" + (if #1 = "Perception" then (#2 + @WIS + (2 x @PROF)) else (#2 + @WIS) end) </function>
+	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" ∨ #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then (#2 + @PROF(()) + @DEX) else (#2 + @DEX) end) </function>
+	<function name="INTCHECK">#1 + ":" + (if #1 = "Investigation" then (#2 + @INT + (@PROF(()) x 2)) else (#2 + @INT) end) </function>
+	<function name="STRCHECK">#1 + ":" + (if #1 = "Athletics" then (#2 + @PROF(()) + @STR) else (#2 + @STR) end)</function>
+	<function name="WISCHECK">#1 + ":" + (if #1 = "Perception" then (#2 + @WIS + (@PROF(()) x 2)) else (#2 + @WIS) end) </function>
 	<dicebar title="(Bar)">
 		<die>D4</die>
 		<die>D6</die>
