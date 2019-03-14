@@ -8,16 +8,11 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then (#9d8 + @DEX) else 0 end). <!--Bashing Damage--> @BDMG ← (if #2 = "Sling" then (#9d4 + @DEX) else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@PDMG,@BDMG)) end</formula>
+		<formula>if #2 = "Vicious Mockery" then #9 ← (@DICECALC(("Cantrip",@LVL))). “Psychic: ” + #9Bd4 + "WIS" + @SAVEDC(()) + "Neg" else @X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Piercing Damage--> @PDMG ← (if #2 = "Rapier" then (#9d8 + @DEX) else 0 end). <!--Bashing Damage--> @BDMG ← (if #2 = "Sling" then (#9d4 + @DEX) else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #3 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@PDMG,@BDMG)) end end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
-		<parameter style="enum" name="Attack" default="Rapier" enums="Rapier,Sling"/>
+		<parameter style="enum" name="Attack" default="Rapier" enums="Rapier,Sling,Vicious Mockery"/>
 		<parameter style="bool" name="Bless"/>
-	</roll>
-	<roll>
-		<formula>#9 ← (@DICECALC(("Cantrip",@LVL))). “Psychic: ” + #9Bd4 + "WIS" + @SAVEDC(()) + "Neg" 
-		</formula>
-		<name>Vicious Mockery</name>
 	</roll>
 	<roll>
 		<formula> "Subtract from Attack, Check or Damage Roll:" + (if @BARDLVL &lt; 5 then d6 elif @BARDLVL &lt; 10 then d8 elif @BARDLVL &lt; 15 then d10 else d12 end) 
@@ -72,21 +67,24 @@
 	<!--#1 = Piercing Damage, #2 = Bashing Damage-->
 	<function name="ATKDMG">(if #1 &gt; 0 then "Piercing:" + #1 else "" end) + (if #2 &gt; 0 then "Bashing:" + #2 else "" end) </function>
 	<!--#1 = Weapon Type, #2 = Roll-->
-	<function name="ATKROLL">"ATK:" + (#2 + @DEX + @PROF(()))</function>
+	<function name="ATKROLL">"ATK:" + (#2 + @PROF(()) + @DEX)</function>
+	<!--#1 = Roll,#2 = Value-->
+	<function name="CRITCALC">if #1 = 20 then (2 x #2) else #2 end</function>
 	<!--#1 = Roll-->
-	<function name="CRITICAL">if #1 = 1 then "Critical Miss! Use Halfling Luck?" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
+	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + @HLUCK(()) + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level-->
-	<function name="DICECALC">if #1 = "Rapier" ∨ #1 = "Sling" then if #2 = 20 then 2 else 1 end elif #1 = "Heat Metal" then if #2 = 1 then 2 else #2 end elif #1 = "Cantrip" then if #2 &lt; 5 then 1 elif #2 &lt; 11 then 2 elif #2 &lt; 17 then 3 else 4 end elif #1 = "Dissonant Whispers" then (#2 + 2) <!--Sleep--> else (3 + (#2 x 2)) end</function>
+	<function name="DICECALC">if #1 = "Rapier" ∨ #1 = "Sling" then @CRITCALC((#2,1)) elif #1 = "Heat Metal" then if #2 = 1 then 2 elif #2 &gt; 9 then 9 else #2 end elif #1 = "Cantrip" then if #2 &lt; 5 then 1 elif #2 &lt; 11 then 2 elif #2 &lt; 17 then 3 else 4 end elif #1 = "Dissonant Whispers" then (#2 + 2) <!--Sleep--> else (3 + (#2 x 2)) end</function>
+	<function name="HLUCK">"Use Halfling Luck?"</function>
 	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
 	<function name="SAVEDC">"Save DC:" + (8 + @PROF(()) + @CHA) </function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
-	<function name="CHACHECK">#1 + ":" + (if #1 = "CHA Save" ∨ #1 = "Persuasion" then (#2 + @CHA + @PROF(())) elif ∨ #1 = "Performance" then (#2 + @CHA + (2 x @PROF(()))) else (#2 + @CHA + (@PROF(()) / 2)) end) + (if #2 = 1 then "Use Halfling Luck?" else "" end)</function>
-	<function name="CONCHECK">#1 + ":" + (#2 + @CON + (@PROF(()) / 2)) + (if #2 = 1 then "Use Halfling Luck?" else "" end)</function>
- 	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" ∨ #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" then (#2 + @DEX + @PROF(())) else (#2 + @DEX + (@PROF(()) / 2)) end) + (if #2 = 1 then "Use Halfling Luck?" else "" end)</function>
-	<function name="STRCHECK">#1 + ":" + (#2 + @STR + (@PROF(()) / 2)) + (if #2 = 1 then "Use Halfling Luck?" else "" end)</function>
-	<function name="INTCHECK">#1 + ":" + (if #1 = "Arcana" ∨ #1 = "Investigation" then (#2 + @INT + @PROF(())) else (#2 + @INT + (@PROF(()) / 2)) end) + (if #2 = 1 then "Use Halfling Luck?" else "" end)</function>
-	<function name="WISCHECK">#1 + ":" + (if #1 = "Perception" then (#2 + @WIS + (2 x @PROF(()))) else (#2 + @WIS + (@PROF(()) / 2)) end) + (if #2 = 1 then "Use Halfling Luck?" else "" end)</function>
+	<function name="CHACHECK">#1 + ":" + (if #1 = "CHA Save" ∨ #1 = "Persuasion" then (#2 + @PROF(()) + @CHA) elif ∨ #1 = "Performance" then (#2 + @CHA + (@PROF(())) x 2) else (#2 + @CHA + (@PROF(()) / 2)) end) + (if #2 = 1 then @HLUCK(()) else "" end)</function>
+	<function name="CONCHECK">#1 + ":" + (#2 + @CON + (@PROF(()) / 2)) + (if #2 = 1 then @HLUCK(()) else "" end)</function>
+ 	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" ∨ #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" then (#2 + @DEX + @PROF(())) else (#2 + @DEX + (@PROF(()) / 2)) end) + (if #2 = 1 then @HLUCK(()) else "" end)</function>
+	<function name="STRCHECK">#1 + ":" + (#2 + @STR + (@PROF(()) / 2)) + (if #2 = 1 then @HLUCK(()) else "" end)</function>
+	<function name="INTCHECK">#1 + ":" + (if #1 = "Arcana" ∨ #1 = "Investigation" then (#2 + @INT + @PROF(())) else (#2 + @INT + (@PROF(()) / 2)) end) + (if #2 = 1 then @HLUCK(()) else "" end)</function>
+	<function name="WISCHECK">#1 + ":" + (if #1 = "Perception" then (#2 + @WIS + (2 x @PROF(()))) else (#2 + @WIS + (@PROF(()) / 2)) end) + (if #2 = 1 then @HLUCK(()) else "" end)</function>
 	<!--Current Effects-->
 	<dicebar title="(Bar)">
 		<die>D20</die>
