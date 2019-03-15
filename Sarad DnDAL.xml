@@ -25,7 +25,7 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ← (if #1 = 1 then @DICECALC(("Superiority Die",20)) else @DICECALC(("Superiority Die",10)) end). "Slashing:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + "Save DC:" + (8 + @STR + @PROF)
+		<formula>#9 ← (if #1 = 1 then @DICECALC(("Superiority Die",20)) else @DICECALC(("Superiority Die",10)) end). "Slashing:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())
 		</formula>
 		<name>Superiority Die</name>
 		<parameter style="bool" name="Crit" default="1"/>
@@ -82,52 +82,25 @@
 	<!--User Functions-->
 	<!--Damage Rolls--> 
 	<!--#1 = Slashing Damage, #2 = Piercing Damage, #3 = Fire Damage-->
-	<function name="ATKDMG">
-		(if #1 &gt; 0 
-			then 
-			"Slashing:" + #1 
-		else 
-			"" 
-		end) + 
-		(if #2 &gt; 0 then "Piercing:" + #2 
-			else 
-			"" 
-		end) + 
-		(if #3 &gt; 0 
-			then 
-			"Fire:" + #3 + "Total:" + (#1 + #2 + #3) 
-		else 
-			"" 
-		end)</function>
+	<function name="ATKDMG">(if #1 &gt; 0 then "Slashing:" + #1 else "" end) + (if #2 &gt; 0 then "Piercing:" + #2 else "" end) + (if #3 &gt; 0 then "Fire:" + #3 + "Total:" + (#1 + #2 + #3) else "" end)</function>
 	<!--#1 = Weapon Type, #2 = Attack Roll-->
-	<function name="ATKROLL">"ATK:" + (if #1 = "Axe" then (#2 + @STR + @PROF) elif #1 = "Longsword" then (#2 + @STR + @PROF + @SWORDBONUS) else (#2 + @DEX + @PROF) end)</function>
+	<function name="ATKROLL">"ATK:" + (if #1 = "Axe" then (#2 + @PROF(()) + @STR) elif #1 = "Longsword" then (#2 + @STR + @PROF(()) + @SWORDBONUS) else (#2 + @DEX + @PROF) end)</function>
+	<!--#1 = Roll,#2 = Value-->
+	<function name="CRITCALC">if #1 = 20 then (2 x #2) else #2 end</function>
 	<!--#1 = Roll-->
 	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level-->
-	<function name="DICECALC">
-		if #1 = "FT" 
-			then 
-			if #2 = 20 
-				then 
-				4 
-			else 
-				2 
-			end 
-		else 
-			if #2 = 20 
-				then 
-				2 
-			else 
-				1 
-			end 
-		end</function>
+	<function name="DICECALC">if #1 = "FT" then @CRITCALC((#2,2)) else @CRITCALC((#2,1)) end</function>
+	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
+	<!--#1 = Stat-->
+	<function name="SAVEDC">"Save DC:" + (8 + (@PROF(()) + @STR) end))</function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
-	<function name="STRCHECK">#1 + ":" + (if #1 = "Athletics" ∨ #1 = "Shield Bash" then (#2 + @STR + @PROF) elif #1 = "STR Save" then (#2 + @STR + @PROF + @CLOAKBONUS) else (#2 + @STR) end)</function>
-	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" then (#2 + @DEX + @SHLDBONUS + @CLOAKBONUS + @PROF) else (#2 + @DEX) end)</function>
-	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON + @PROF + @CLOAKBONUS) else (#2 + @CON) end)</function>
-	<function name="INTCHECK">#1 + ":" + (if #1 = "Arcana" ∨ #1 = "Investigation" then (#2 + @INT + @PROF) elif #1 = "INT Save" then (#2 + @INT + @CLOAKBONUS) else (#2 + @INT) end)</function>
-	<function name="WISCHECK">#1 + ":" + (if #1 = "Perception" then (#2 + @WIS + @PROF) elif #1 = "WIS Save" then (#2 + @WIS + @CLOAKBONUS + @PROF) else (#2 + @WIS) end) </function>
+	<function name="STRCHECK">#1 + ":" + (if #1 = "Athletics" ∨ #1 = "Shield Bash" then (#2 + @PROF(()) + @STR ) elif #1 = "STR Save" then (#2 + @STR + @PROF(()) + @CLOAKBONUS) else (#2 + @STR) end)</function>
+	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" then (#2 + @PROF(()) + @DEX + @SHLDBONUS + @CLOAKBONUS) else (#2 + @DEX) end)</function>
+	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON + @PROF(()) + @CLOAKBONUS) else (#2 + @CON) end)</function>
+	<function name="INTCHECK">#1 + ":" + (if #1 = "Arcana" ∨ #1 = "Investigation" then (#2 + @PROF(()) + @INT) elif #1 = "INT Save" then (#2 + @INT + @CLOAKBONUS) else (#2 + @INT) end)</function>
+	<function name="WISCHECK">#1 + ":" + (if #1 = "Perception" then (#2 + @PROF(()) + @WIS) elif #1 = "WIS Save" then (#2 + @PROF(()) + @WIS + @CLOAKBONUS) else (#2 + @WIS) end) </function>
 	<function name="CHACHECK">#1 + ":" + (if #1 = "CHA Save" then (#2 + @CHA + @CLOAKBONUS) else (#2 + @CHA) end)</function>
 	<!--Current Effects-->
 	<dicebar title="(Bar)">
