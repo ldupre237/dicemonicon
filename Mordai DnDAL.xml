@@ -9,7 +9,7 @@
 		<parameter style="bool" name="Shield Guardian"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X,#5))). <!--Bashing Damage-->@BDMG ← (if #2 = "Shillelagh" then (#9d8 + @CHA) else 0 end). <!--Force Damage--> @FDMG ← (if #2 = "Eldritch Blast" then (#9d10 + @CHA) else 0 end). <!--Fire Damage--> @FIDMG ← (if #2 = "Firebolt" then #9Od10 else 0 end). <!--Lightning Damage-->@LDMG ← (if #2 = "Shocking Grasp" then #9Bd8 else 0 end). <!--Chaos Bolt Damage-->@CBDMG ← (if #2 = "Chaos Bolt" ∨ #2 = "Chaos Bolt(Warlock)" then @D1 ← (d8). @D2 ← (d8). @D3 ← (if @X = 20 then (@D1 + d8) else @D1 end). @D4 ← (if @X = 20 then (@D2 + d8) else @D2 end). if #2 = "Chaos Bolt" then (@D3 + @D4 + #9d6) else #9 ← (@DICECALC((#2,@X,@PACTLVL))). (@D3 + @D4 + #9d6) end else 0 end). <!--Necrotic Damage--> @NDMG ← (if #2 = "Chill Touch" then #9Kd8 else 0 end). <!--Hex Damage--> @NDMG ← (if #3 = 1 then #9 ←(@DICECALC(("Hex",@X))). (@NDMG + #9Kd6) else @NDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #4 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + (if #2 = "Chaos Bolt" ∨ #2 = "Chaos Bolt(Warlock)" then (if @D1 = @D2 then "Attack Again!" + @CHAOSBOLT((@D1)) else @CHAOSBOLT((@D1)) + "or" + @CHAOSBOLT((@D2)) end) else "" end) + @ATKDMG((@BDMG,@FDMG,@FIDMG,@LDMG,@CBDMG,@NDMG)) end</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X,#5))). <!--Bashing Damage-->@BDMG ← (if #2 = "Shillelagh" then (#9d8 + @CHA) else 0 end). <!--Force Damage--> @FDMG ← (if #2 = "Eldritch Blast" then (#9d10 + @CHA) else 0 end). <!--Fire Damage--> @FIDMG ← (if #2 = "Firebolt" then #9Od10 else 0 end). <!--Lightning Damage-->@LDMG ← (if #2 = "Shocking Grasp" then #9Bd8 else 0 end). <!--Chaos Bolt Damage-->@CBDMG ← (if #2 = "Chaos Bolt" ∨ #2 = "Chaos Bolt(Warlock)" then @D1 ← (d8). @D2 ← (d8). @D3 ← (if @X = 20 then (@D1 + d8) else @D1 end). @D4 ← (if @X = 20 then (@D2 + d8) else @D2 end). if #2 = "Chaos Bolt" then (@D3 + @D4 + #9d6) else #9 ← (@DICECALC((#2,@X,@PACTLVL(())))). (@D3 + @D4 + #9d6) end else 0 end). <!--Necrotic Damage--> @NDMG ← (if #2 = "Chill Touch" then #9Kd8 else 0 end). <!--Hex Damage--> @NDMG ← (if #3 = 1 then #9 ←(@DICECALC(("Hex",@X))). (@NDMG + #9Kd6) else @NDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #4 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + (if #2 = "Chaos Bolt" ∨ #2 = "Chaos Bolt(Warlock)" then (if @D1 = @D2 then "Attack Again!" + @CHAOSBOLT((@D1)) else @CHAOSBOLT((@D1)) + "or" + @CHAOSBOLT((@D2)) end) else "" end) + @ATKDMG((@BDMG,@FDMG,@FIDMG,@LDMG,@CBDMG,@NDMG)) end</formula>
 		<name>Attacks</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter style="enum" name="Attack" default="Eldritch Blast" enums="Chaos Bolt,Chaos Bolt(Warlock),Chill Touch,Eldritch Blast,Firebolt,Shocking Grasp,Shillelagh"/>
@@ -18,7 +18,7 @@
 		<parameter style="number" default="1" name="Spell Level"/>
 	</roll>
 	<roll>
-		<formula>#9 ←(@DICECALC((#1,10,@PACTLVL))). if #1 = "Cloud of Daggers" then "Slashing:" + #9d4 elif #1 = "Counterspell" then @COUNTERSPELL((@PACTLVL,d20)) elif #1 = "Sickening Radiance" then "Radiant:" + 4Yd10 + "CON" + @SAVEDC(()) + "Neg" elif #1 = "Shadow of Moil" then "Necrotic:" + 2Kd8 elif #1 = "Hellish Rebuke" then "Fire:" + 3Od10 + "DEX" + @SAVEDC(()) + "Half" else "Psychic:" + (if #1 = "Vicious Mockery" then #9 ←(@DICECALC((#1,10))). #9Bd4 + "WIS" + @SAVEDC(()) + "Neg" else <!--Synaptic Static--> 8Cd6 + "INT" + @SAVEDC(()) + "Half" end) end)</formula>
+		<formula>#9 ←(@DICECALC((#1,10,@PACTLVL(())))). if #1 = "Cloud of Daggers" then "Slashing:" + #9d4 elif #1 = "Counterspell" then @COUNTERSPELL((@PACTLVL(()),d20)) elif #1 = "Sickening Radiance" then "Radiant:" + 4Yd10 + "CON" + @SAVEDC(()) + "Neg" elif #1 = "Shadow of Moil" then "Necrotic:" + 2Kd8 elif #1 = "Hellish Rebuke" then "Fire:" + 3Od10 + "DEX" + @SAVEDC(()) + "Half" else "Psychic:" + (if #1 = "Vicious Mockery" then #9 ←(@DICECALC((#1,10))). #9Bd4 + "WIS" + @SAVEDC(()) + "Neg" else <!--Synaptic Static--> 8Cd6 + "INT" + @SAVEDC(()) + "Half" end) end)</formula>
 		<name>Spells (Warlock)</name>
 		<parameter style="enum" name="Spell" default="Cloud of Daggers" enums="Cloud of Daggers,Counterspell,Hellish Rebuke,Shadow of Moil,Sickening Radiance,Synaptic Static,Vicious Mockery"/>
 	</roll>
@@ -72,28 +72,32 @@
 	<variable kind="number" name="FOCUSBONUS">3</variable>
 	<variable kind="number" name="INT">1</variable>
 	<variable kind="number" name="LVL">14</variable>
-	<variable kind="number" name="PROF">5</variable>
-	<variable kind="number" name="PACTLVL">5</variable>
+	<variable kind="number" name="SORCERERLVL">3</variable>
 	<variable kind="number" name="STR">-1</variable>
 	<variable kind="number" name="WIS">0</variable>
+	<variable kind="number" name="WARLOCKLVL">11</variable>
 	<!--User Functions-->
 	<!--Attack Rolls-->
 	<!--#1 = Bashing Damage, #2 = Force Damage, #3 = Fire Damage, #4 = Lightning Damage, #5 = Chaos Bolt Damage, #6 = Necrotic Damage-->
 	<function name="ATKDMG">(if #1 &gt; 0 then "Bashing:" + #1 else "" end) + (if #2 &gt; 0 then "Force:" + #2 else "" end) + (if #3 &gt; 0 then "Fire:" + #3 else "" end) + (if #4 &gt; 0 then "Lightning:" + #4 else "" end) + (if #5 &gt; 0 then #5 else "" end) + (if #6 &gt; 0 then "Necrotic:" + #6 + "Total:" + (#1 + #2 + #3 + #4 + #5 + #6) else "" end)</function>
 	<!--#1 = Weapon Type, #2 = Attack Roll-->
-	<function name="ATKROLL">"ATK:" + (if #1 = "Shillelagh" ∨ #1 = "Firebolt" ∨ #1 = "Shocking Grasp" ∨ #1 = "Chaos Bolt" ∨ #1 = "Chill Touch" then (#2 + @CHA + @PROF) else (#2 + @CHA + @PROF + @FOCUSBONUS) end)</function>
+	<function name="ATKROLL">"ATK:" + (if #1 = "Shillelagh" ∨ #1 = "Firebolt" ∨ #1 = "Shocking Grasp" ∨ #1 = "Chaos Bolt" ∨ #1 = "Chill Touch" then (#2 + @PROF(()) + @CHA) else (#2 + @CHA + @PROF(()) + @FOCUSBONUS) end)</function>
 	<!-- #1, #2 d8 rolls-->
 	<function name="CHAOSBOLT">if #1 = 1 then "Acid:" elif #1 = 2 then "Cold:" elif #1 = 3 then "Fire:" elif #1 = 4 then "Force:" elif #1 = 5 then "Lightning:" elif #1 = 6 then "Poison:" elif #1 = 7 then "Psychic:" else "Thunder:" end </function>
 	<!--#1 = Spell Level, #2 = d20 Roll-->
 	<function name="COUNTERSPELL">@S ← (#2 + @CHA). #9 ← (if #1 &lt; 3 then 3 else #2 end). "CHA Check:" + @S + "Spell Level Countered:" + (if (@S - 10) &gt; 9 then 9 elif (@S - 10) &lt; #1 then #1 else (@S - 10) end)</function>
+	<!--#1 = Roll,#2 = Value-->
+	<function name="CRITCALC">if #1 = 20 then (2 x #2) else #2 end</function>
 	<!--#1 = Weapon Type #2 = Roll-->
 	<function name="CRITICAL">if #2 = 1 then "Critical Miss!" + (if #1 = "Shillelagh" then "\$Swoosh$" else "\$Bah$" end) else "Critical Hit!" + (if #1 = "Shillelagh" then "\$Clang$" else "\$Gong$" end) end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level, #3 = Spell Level-->
-	<function name="DICECALC">if #1 = "Chaos Bolt" then if #2 = 20 then (2 x #3) else #3 end elif #1 = "Cloud of Daggers" then @Y ← (if #3 &lt; 3 then 2 else #3 end). 4 + (2 x (@Y - 2)) elif #1 = "Shillelagh" ∨ #1 = "Hex" ∨ #1 = "Eldritch Blast" if #2 = 20 then 2 else 1 end else <!--Cantrips--> if #2 = 20 then if @LVL &lt; 5 then 2 elif @LVL &lt; 11 then 4 elif @LVL &lt; 17 then 6 else 8 end else if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end end end</function>
+	<function name="DICECALC">if #1 = "Chaos Bolt" then @CRITCALC((#2,#3)) elif #1 = "Cloud of Daggers" then @Y ← (if #3 &lt; 3 then 2 else #3 end). 4 + (2 x (@Y - 2)) elif #1 = "Shillelagh" ∨ #1 = "Hex" ∨ #1 = "Eldritch Blast" then @CRITCALC((#2,1)) else <!--Cantrips--> if @LVL &lt; 5 then @CRITCALC((#2,1)) elif @LVL &lt; 11 then @CRITCALC((#2,2)) elif @LVL &lt; 17 then @CRITCALC((#2,3)) else @CRITCALC((#2,4)) end end</function>
 	<!--#1 = d20 Roll-->
 	<function name="DISPEL">@S ← (#1 + (@CHA - 10)). "CHA Check:" + (@S + 10) + "Spell Level Dispelled:" + (if @S &lt; 4 then 3 elif @S &gt; 9 then 9 else @S end)</function>
-	<function name="SORCSAVEDC">"Save DC:" + (8 + @PROF + @CHA)</function>
-	<function name="SAVEDC">"Save DC:" + (8 + @PROF + @CHA + @FOCUSBONUS)</function>
+	<function name="PACTLVL">if @WARLOCKLVL &lt; 1 then 1 elif @WARLOCKLVL &lt; 5 then 2 elif @WARLOCKLVL &lt; 7 then 3 elif @WARLOCKLVL &lt; 9 then 4 else 5 end</function>
+	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
+	<function name="SORCSAVEDC">"Save DC:" + (8 + @PROF(()) + @CHA)</function>
+	<function name="SAVEDC">"Save DC:" + (8 + @PROF(()) + @CHA + @FOCUSBONUS)</function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
 	<function name="STRCHECK">#1 + ":" + (#2 + @STR) end</function>
