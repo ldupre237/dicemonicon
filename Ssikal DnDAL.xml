@@ -9,10 +9,10 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Slashing Damage--> @SDMG ← (if #2 = "Macuahuitl" then (#9d8 + @STR + @SWORDBONUS + 2) else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Spear" then (#9d6 + @STR + @SPEARBONUS + 2) else 0 end). <!--Radiant Damage--> @RDMG ← (if #3 = "Divine Favor" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear") then #9 ← (@DICECALC(("Divine Favor",@X))). #9Yd4 else 0 end). <!--Fire Damage--> @FDMG ← (if #3 = "Searing Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear") then #9 ← (@DICECALC(("Searing Smite",@X,#4))). #9Od6 else 0 end). <!--Thunder Damage--> @TDMG ← (if #3 = "Thunderous Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear") then #9 ← (@DICECALC(("Thunderous Smite",@X))). #9Ad6 else 0 end). <!--Psychic Damage--> @PSDMG ← (if #3 = "Wrathful Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear") then #9 ← (@DICECALC(("Wrathful Smite",@X))). #9Md6 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((#3,@SDMG,@PDMG,@RDMG,@FDMG,@TDMG,@PSDMG)) end</formula>
+		<formula>if #2 = "Poison Spray" then #9 ←(@DICECALC(("Cantrip",10))). "Poison:" + #9Gd12 + "CON" + @SAVEDC(("CHA")) + "Neg" else @X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Slashing Damage--> @SDMG ← (if #2 = "Macuahuitl" then (#9d8 + @STR + @SWORDBONUS + 2) else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Spear" then (#9d6 + @STR + @SPEARBONUS + 2) else 0 end). <!--Radiant Damage--> @RDMG ← (if #3 = "Divine Favor" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear") then #9 ← (@DICECALC(("Divine Favor",@X))). #9Yd4 else 0 end). <!--Fire Damage--> @FDMG ← (if #3 = "Searing Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear") then #9 ← (@DICECALC(("Searing Smite",@X,#4))). #9Od6 else 0 end). <!--Thunder Damage--> @TDMG ← (if #3 = "Thunderous Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear") then #9 ← (@DICECALC(("Thunderous Smite",@X))). #9Ad6 else 0 end). <!--Psychic Damage--> @PSDMG ← (if #3 = "Wrathful Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear") then #9 ← (@DICECALC(("Wrathful Smite",@X))). #9Md6 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((#3,@SDMG,@PDMG,@RDMG,@FDMG,@TDMG,@PSDMG)) end end</formula>
 		<name>Attacks</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
-		<parameter style="enum" name="Weapon" default="Macuahuitl" enums="Macuahuitl,Spear"/>
+		<parameter style="enum" name="Weapon" default="Macuahuitl" enums="Macuahuitl,Spear,Poison Spray"/>
 		<parameter style="enum" name="Damage Addon" default="None" enums="Divine Favor,None,Searing Smite,Thunderous Smite,Wrathful Smite"/>
 		<parameter style="number" default="1" name="Spell Level"/>
 		<parameter style="bool" name="Bless"/>
@@ -26,10 +26,6 @@
 		<parameter style="bool" default="0" name="Crit"/>
 	</roll>
 	<roll>
-		<formula>#9 ←(@DICECALC(("Cantrip",10))). "Poison:" + #9Gd12 + "CON" + @SAVEDC(("CHA")) + "Neg"</formula>
-		<name>Poison Spray</name>
-	</roll>
-	<roll>
 		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "Athletics" then @STRCHECK((#1,@X)) elif #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then @DEXCHECK((#1,@X)) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "Investigation" ∨ #1 ="Nature" ∨ #1 = "Religion" then @INTCHECK((#1,@X)) elif #1 = "Animal Handling" ∨ #1 = "Insight" ∨ #1 = "Medicine" ∨ #1 ="Perception" ∨ #1 = "Survival" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end
 		</formula>
 		<name>Skills</name>
@@ -41,7 +37,7 @@
 		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then (@X + @CON) else (@X + Wd4 + @CON) end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S ≤ @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
 		<name>Concentration Check</name>
 		<parameter style="number" default="20" name="Damage Amount"/>
-		<parameter style="enum" name="Roll" default="Advantage" enums="Basic,Advantage,Disadvantage"/>
+		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
