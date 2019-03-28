@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<macro name="REO" defaultTN="2" color="None" hint="Great Weapon Fighting">
+	<action cond="face&lt;=tn ∧ rolls = 1" value="0" action="Combine"/>
+	<action cond="true" value="face" action="Stop"/>
+	</macro>
