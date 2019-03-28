@@ -18,9 +18,9 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>if #1 = "Divine Smite" then #9 ← @SMITE((#2,#3,#4)). "Radiant:" + #9Yd8 else <!--Cure Wounds--> "HP Healed:" + (#2d8 + @CHA) end</formula>
+		<formula>if #1 = "Divine Smite" then #9 ← @SMITE((#2,#3,#4)). "Radiant:" + #9Yd8 elif #1 = "Ensnaring Strike" then #9 ←(if #2 &gt; 4 then 5 else #2 end). "Piercing:" + #9d6 + "STR Check DC:" + (8 + (@PROF(()) + @CHA)) + "as action to Neg" else <!--Cure Wounds--> "HP Healed:" + (#2d8 + @CHA) end</formula>
 		<name>Smite/Spells</name>
-		<parameter name="Spell" style="enum" default="Divine Smite" enums="Cure Wounds,Divine Smite"/>
+		<parameter name="Spell" style="enum" default="Divine Smite" enums="Cure Wounds,Divine Smite,Ensnaring Strike"/>
 		<parameter style="number" default="1" name="Spell Level"/>
 		<parameter style="bool" default="0" name="Fiend/Undead"/>
 		<parameter style="bool" default="0" name="Crit"/>
