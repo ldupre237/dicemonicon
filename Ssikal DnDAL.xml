@@ -61,8 +61,8 @@
 	<variable kind="number" name="CON">1</variable>
 	<variable kind="number" name="DEX">0</variable>
 	<variable kind="number" name="INT">-1</variable>
-	<variable kind="number" name="LVL">2</variable>
-	<variable kind="number" name="PALADINLVL">2</variable>
+	<variable kind="number" name="LVL">3</variable>
+	<variable kind="number" name="PALADINLVL">3</variable>
 	<variable kind="number" name="STR">2</variable>
 	<variable kind="number" name="SPEARBONUS">0</variable>
 	<variable kind="number" name="SWORDBONUS">0</variable>
