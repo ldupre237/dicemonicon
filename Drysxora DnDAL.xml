@@ -9,10 +9,10 @@
 		<parameter style="bool" name="Steed"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else <!--Dice Calculation--> #9 ← (@DICECALC((#2,@X))). <!--Bashing Damage--> @BDMG ← (if #2 = "Maul" then (#9d6REO2 + @STR + @MAULBONUS) else 0 end). <!--Force Damage--> @FDMG ← (if #2 = "Eldritch Blast" then #9d10 else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Steed" then (#9d8 + @STSTR) else 0 end). <!--Hunters Mark--> @BDMG ← (if #3 = "Hunters Mark" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Hunters Mark",@X))). (#9d6REO2 + @BDMG) else @BDMG end). @FDMG ← (if #3 = "Hunters Mark" ∧ #2 = "Eldritch Blast" then #9 ← (@DICECALC(("Hunters Mark",@X))). (#9d6 + @FDMG) else @FDMG end). <!--GWM Damage--> @BDMG ← (if #2 = "Maul" ∧ #4 = 1 then (@BDMG + 10) else @BDMG end). <!--Divine Favor--> @RDMG ← (if #3 = "Divine Favor" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Divine Favor",@X))). #9Yd4REO2 elif #3 = "Branding Smite" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Branding Smite",@X,#5))). #9Yd6REO2 else 0 end). <!--Fire Damage--> @FIDMG ← (if #3 = "Searing Smite" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Searing Smite",@X,#5))). #9Od6REO2 else 0 end). <!--Thunder Damage--> @TDMG ← (if #3 = "Thunderous Smite" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Thunderous Smite",@X))). #9Ad6REO2 else 0 end). <!--Psychic Damage--> @PSDMG ← (if #3 = "Wrathful Smite" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Wrathful Smite",@X))). #9Md6REO2 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #6 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,#4,@X)) end) + @ATKDMG((#3,@BDMG,@FDMG,@RDMG,@PDMG,@FIDMG,@TDMG,@PSDMG,#2)) end</formula>
+		<formula>if #2 = "Breath Weapon" then #9 ← (@DICECALC(("Breath Weapon"))). "Fire:" + #9Od6 + @RIDER((#2)) else @X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else <!--Dice Calculation--> #9 ← (@DICECALC((#2,@X))). <!--Bashing Damage--> @BDMG ← (if #2 = "Maul" then (#9d6REO2 + @STR + @MAULBONUS) else 0 end). <!--Force Damage--> @FDMG ← (if #2 = "Eldritch Blast" then #9d10 else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Steed" then (#9d8 + @STSTR) else 0 end). <!--Hunters Mark--> @BDMG ← (if #3 = "Hunters Mark" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Hunters Mark",@X))). (#9d6REO2 + @BDMG) else @BDMG end). @FDMG ← (if #3 = "Hunters Mark" ∧ #2 = "Eldritch Blast" then #9 ← (@DICECALC(("Hunters Mark",@X))). (#9d6 + @FDMG) else @FDMG end). <!--GWM Damage--> @BDMG ← (if #2 = "Maul" ∧ #4 = 1 then (@BDMG + 10) else @BDMG end). <!--Divine Favor--> @RDMG ← (if #3 = "Divine Favor" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Divine Favor",@X))). #9Yd4REO2 elif #3 = "Branding Smite" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Branding Smite",@X,#5))). #9Yd6REO2 else 0 end). <!--Fire Damage--> @FIDMG ← (if #3 = "Searing Smite" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Searing Smite",@X,#5))). #9Od6REO2 else 0 end). <!--Thunder Damage--> @TDMG ← (if #3 = "Thunderous Smite" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Thunderous Smite",@X))). #9Ad6REO2 else 0 end). <!--Psychic Damage--> @PSDMG ← (if #3 = "Wrathful Smite" ∧ #2 = "Maul" then #9 ← (@DICECALC(("Wrathful Smite",@X))). #9Md6REO2 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #6 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,#4,@X)) end) + @ATKDMG((#3,@BDMG,@FDMG,@RDMG,@PDMG,@FIDMG,@TDMG,@PSDMG,#2)) end end</formula>
 		<name>Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
-		<parameter style="enum" name="Attack" default="Maul" enums="Eldritch Blast,Maul,Steed"/>
+		<parameter style="enum" name="Attack" default="Maul" enums="Breath Weapon,Eldritch Blast,Maul,Steed"/>
 		<parameter style="enum" name="Damage Addon" default="None" enums="Branding Smite,Divine Favor,Hunters Mark,None,Searing Smite,Thunderous Smite,Wrathful Smite"/>
 		<parameter style="bool" default="1" name="GWM"/>
 		<parameter style="number" default="1" name="Spell Level"/>
@@ -29,7 +29,7 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>if #1 = "Divine Smite" then #9 ← @SMITE((#2,#3,#4)). "Radiant:" + #9Yd8REO2 elif #1 = "Hellish Rebuke" then #9 ← @DICECALC((#1,,#2)). "Fire:" + #9Od10 else "HP Healed:" + (#2d8 + @CHA) end</formula>
+		<formula>if #1 = "Divine Smite" then #9 ← @SMITE((#2,#3,#4)). "Radiant:" + #9Yd8REO2 elif #1 = "Hellish Rebuke" then #9 ← @DICECALC((#1,,#2)). "Fire:" + #9Od10 + @RIDER((#1)) else "HP Healed:" + (#2d8 + @CHA) end</formula>
 		<name>Smite/Spells (Level Dependent)</name>
 		<parameter name="Spell" style="enum" default="Divine Smite" enums="Cure Wounds,Divine Smite,Hellish Rebuke"/>
 		<parameter style="number" default="1" name="Spell Level"/>
@@ -37,15 +37,11 @@
 		<parameter style="bool" default="0" name="Crit"/>
 	</roll>
 	<roll>
-		<formula>if #1 = "Divine Smite" then #9 ← @SMITE((@PACTLVL(()),#2,#3)). "Radiant:" + #9Yd8REO2 elif #1 = "Hellish Rebuke" then #9 ← @DICECALC((#1,,@PACTLVL(()))). "Fire:" + #9Od10 else #9 ← (@PACTLVL(())). "HP Healed:" + (#9d8 + @CHA) end</formula>
+		<formula>if #1 = "Divine Smite" then #9 ← @SMITE((@PACTLVL(()),#2,#3)). "Radiant:" + #9Yd8REO2 elif #1 = "Hellish Rebuke" then #9 ← @DICECALC((#1,,@PACTLVL(()))). "Fire:" + #9Od10 + @RIDER((#1)) else #9 ← (@PACTLVL(())). "HP Healed:" + (#9d8 + @CHA) end</formula>
 		<name>Warlock Smite/Spells</name>
 		<parameter name="Spell" style="enum" default="Divine Smite" enums="Cure Wounds,Divine Smite,Hellish Rebuke"/>
 		<parameter style="bool" default="0" name="Fiend/Undead"/>
 		<parameter style="bool" default="0" name="Crit"/>
-	</roll>
-	<roll>
-		<formula>#9 ← (@DICECALC(("Breath Weapon"))). "Fire:" + #9Od6 + "(DEX" + @SAVEDC(("CON")) + "Half)"</formula>
-		<name>Breath Weapon</name>
 	</roll>
 	<roll>
 		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "Athletics" then @STRCHECK((#1,@X,#4)) elif #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then @DEXCHECK((#1,@X,#4)) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "Investigation" ∨ #1 ="Nature" ∨ #1 = "Religion" then @INTCHECK((#1,@X,#4)) elif #1 = "Animal Handling" ∨ #1 = "Insight" ∨ #1 = "Medicine" ∨ #1 ="Perception" ∨ #1 = "Survival" then @WISCHECK((#1,@X,#4)) else @CHACHECK((#1,@X,#4)) end</formula>
@@ -101,7 +97,7 @@
 	<!--User Functions-->
 	<!--Attack Functions-->
 	<!--#1 = Damage Addon, #2 = Bashing Damage, #3 = Force Damage #4 = Radiant Damage, #5 = Piercing Damage #6 = Fire Damage, #7 = Thunder Damage #8 = Psychic Damage #9 = Attack-->
-	<function name="ATKDMG">(if #2 &gt; 0 then "Bashing:" + #2 else "" end) + (if #5 &gt; 0 then "Piercing:" + #5 else "" end) + (if #3 &gt; 0 then "Force:" + #3 else "" end) + (if #4 &gt; 0 then "Radiant:" + #4 else "" end) + (if #6 &gt; 0 then "Fire:" + #6 else "" end) + (if #7 &gt; 0 then "Thunder:" + #7 else "" end) + (if #8 &gt; 0 then "Psychic:" + #8 else "" end) + (if #4 &gt; 0 ∨ #6 &gt; 0 ∨ #7 &gt; 0 ∨ #8 &gt; 0 then "Total:" + (#2 + #3 + #4 + #5 + #6 + #7 + #8) else "" end) + (if #1 = "Branding Smite" ∧ #4 &gt; 0 then "Target cannot be invisible" elif #1 = "Searing Smite" ∧ #6 &gt; 0 then "CON" + (if #9 = "Steed" then @SAVEDC(("STCHA")) else @SAVEDC(("CHA")) end) + "or catch fire (d6 at start of turn)" elif #1 = "Thunderous Smite" ∧ #7 &gt; 0 then "STR" + (if #9 = "Steed" then @SAVEDC(("STCHA")) else @SAVEDC(("CHA")) end) + "or pushed 10'" elif #1 = "Wrathful Smite" ∧ #8 &gt; 0 then "WIS" + (if #9 = "Steed" then @SAVEDC(("STCHA")) else @SAVEDC(("CHA")) end) + "or frightened (action to save again)" else "" end)</function>
+	<function name="ATKDMG">(if #2 &gt; 0 then "Bashing:" + #2 else "" end) + (if #5 &gt; 0 then "Piercing:" + #5 else "" end) + (if #3 &gt; 0 then "Force:" + #3 else "" end) + (if #4 &gt; 0 then "Radiant:" + #4 else "" end) + (if #6 &gt; 0 then "Fire:" + #6 else "" end) + (if #7 &gt; 0 then "Thunder:" + #7 else "" end) + (if #8 &gt; 0 then "Psychic:" + #8 else "" end) + (if #4 &gt; 0 ∨ #6 &gt; 0 ∨ #7 &gt; 0 ∨ #8 &gt; 0 then "Total:" + (#2 + #3 + #4 + #5 + #6 + #7 + #8) else "" end) + (if #9 = "Steed" then "" else @RIDER((#1)) end)</function>
 	<!--#1 = Weapon Type, #2 = GWM, #3 = Roll-->
 	<function name="ATKROLL">"ATK:" + (if #2 = 1 ∧ #1 = "Maul" then (#3 + @STR + @PROF(()) + @MAULBONUS - 5) elif #1 = "Maul" then (#3 + @STR + @PROF(()) + @MAULBONUS) elif #1 = "Steed" then (#3 + @STSTR + @STPROF) else (#3 + @PROF(()) + @CHA) end)</function>
 	<function name="BREATHDICE">if #1 &lt; 6 then 2 elif #1 &lt; 11 then 3 elif #1 &lt; 16 then 4 else 5 end</function>
@@ -113,9 +109,10 @@
 	<function name="DICECALC">if #1 = "Maul" ∨ #1 = "Thunderous Smite" then @CRITCALC((#2,2)) elif #1 = "Hellish Rebuke" then @CRITCALC((10,(1 + #3))) elif #1 = "Searing Smite" then if #3 &gt; 4 then @CRITCALC((#2,5)) else @CRITCALC((#2,#3)) end elif #1 = "Branding Smite" then if #3 &lt; 3 then @CRITCALC((#2,2)) elif #3 &gt; 4 then @CRITCALC((#2,5)) else @CRITCALC((#2,#3)) end elif #1 = "Breath Weapon" then if @LVL &lt; 6 then 2 elif @LVL &lt; 11 then 3 elif @LVL &lt; 16 then 4 else 5 end else if #2 = 20 then 2 else 1 end end</function>
 	<function name="PACTLVL">if @WARLOCKLVL &lt; 3 then 1 elif @WARLOCKLVL &lt; 5 then 2 elif @WARLOCKLVL &lt; 7 then 3 elif @WARLOCKLVL &lt; 9 then 4 else 5 end</function>
 	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
+	<!--#1 = Damage Addon-->
+	<function name="RIDER">@DC ← (if #1 = "Breath Weapon" then @SAVEDC(("CON")) else @SAVEDC(("CHA")) end). (if #1 = "Branding Smite" then "Target cannot be invisible" elif #1 = "Breath Weapon" ∨ #1 = "Hellish Rebuke" then "(DEX" + @DC + "Half)" elif #1 = "Searing Smite" then "CON" + @DC + "or catch fire (d6 at start of turn)" elif #1 = "Thunderous Smite" then "STR" + @DC + "or pushed 10'" elif #1 = "Wrathful Smite" then "WIS" + @DC + "or frightened (action to save again)" else "" end)</function>
 	<!--#1 = Stat-->
-	<function name="SAVEDC">"Save DC:" + (8 + (if #1 = "CON" then (@PROF(()) + @CON) elif #1 = "STCHA" then (@STPROF + @STCHA) else (@PROF(()) + @CHA) end))
-	</function>
+	<function name="SAVEDC">"Save DC:" + (8 + (if #1 = "CON" then (@PROF(()) + @CON) elif #1 = "STCHA" then (@STPROF + @STCHA) else (@PROF(()) + @CHA) end))</function>
 	<!--#1 = Spell Level, #2 = Fiend/Undead #3 = Crit -->
 	<function name="SMITE">#9 ← (if #1 &gt; 4 then if #2 = 1 then 6 else 5 end else if #2 = 1 then (#1 + 2) else (#1 + 1) end end). if #3 = 1 then @CRITCALC((20,#9)) else @CRITCALC((10,#9)) end</function>
 	<!--Ability Checks-->
