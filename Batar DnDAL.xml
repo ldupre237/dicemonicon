@@ -17,7 +17,7 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ← (if #1 = 1 then @DICECALC((20)) else @DICECALC(("SD",10)) end). "Extra Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())</formula>
+		<formula>#9 ← (if #1 = 1 then @DICECALC(("SD",20)) else @DICECALC(("SD",10)) end). "Extra Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())</formula>
 		<name>Superiority Die</name>
 		<parameter style="bool" name="Crit" default="1"/>
 	</roll>
