@@ -55,8 +55,8 @@
 	<variable kind="number" name="DEX">5</variable>
 	<variable kind="number" name="FIGHTERLVL">6</variable>
 	<variable kind="number" name="INT">-1</variable>
-	<variable kind="number" name="LVL">7</variable>
-	<variable kind="number" name="ROGUELVL">1</variable>
+	<variable kind="number" name="LVL">8</variable>
+	<variable kind="number" name="ROGUELVL">2</variable>
 	<variable kind="number" name="STR">0</variable>
 	<variable kind="number" name="WIS">2</variable>
 	<!--User Functions-->
