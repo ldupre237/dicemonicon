@@ -79,7 +79,7 @@
 	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @PROF(()) + @CON) else (#2 + @CON) end)</function>
  	<function name="DEXCHECK">#1 + ":" + (if #1 = "Acrobatics" ∨ #1 = "Thieves Tools" then (#2 + @PROF(()) + @DEX) elif #1 = "Stealth" then (#2 + @DEX + (@PROF(()) x 2)) else (#2 + @DEX) end)</function>
 	<function name="STRCHECK">#1 + ":" + (if #1 = "STR Save" then (#2 + @PROF(()) + @STR) else (#2 + @STR) end)</function>
-	<function name="INTCHECK">#1 + ":" + (if #1 = "Investigation" then (#2 + @WIS + (@PROF(()) x 2))) else (#2 + @WIS) end)</function>
+	<function name="INTCHECK">#1 + ":" + (if #1 = "Investigation" then (#2 + @INT + (@PROF(()) x 2) else (#2 + @INT) end)</function>
 	<function name="WISCHECK">#1 + ":" + (if #1 = "Animal Handling" ∨ #1 = "Perception" then (#2 + @PROF(()) + @WIS) else (#2 + @WIS) end)</function>
 	<!--Current Effects-->
 	<dicebar title="(Bar)">
