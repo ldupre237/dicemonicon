@@ -34,7 +34,7 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then (@X + @CON) else (@X + Wd4 + @CON) end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S ≤ @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then (@X + @CON + @CHA) else (@X + Wd4 + @CON +@CHA) end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S ≤ @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
 		<name>Concentration Check</name>
 		<parameter style="number" default="20" name="Damage Amount"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
@@ -62,8 +62,8 @@
 	<variable kind="number" name="CON">1</variable>
 	<variable kind="number" name="DEX">0</variable>
 	<variable kind="number" name="INT">-1</variable>
-	<variable kind="number" name="LVL">5</variable>
-	<variable kind="number" name="PALADINLVL">5</variable>
+	<variable kind="number" name="LVL">6</variable>
+	<variable kind="number" name="PALADINLVL">6</variable>
 	<variable kind="number" name="STR">4</variable>
 	<variable kind="number" name="SPEARBONUS">0</variable>
 	<variable kind="number" name="SWORDBONUS">0</variable>
@@ -88,12 +88,12 @@
 	<function name="SMITE">#9 ← (if #1 &gt; 4 then if #2 = 1 then 6 else 5 end else if #2 = 1 then (#1 + 2) else (#1 + 1) end end). if #3 = 1 then @CRITCALC((20,#9)) else @CRITCALC((10,#9)) end</function>
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
-	<function name="CHACHECK">#1 + ":" + (if #1 = "CHA Save" ∨ #1 = "Intimidation" then (#2 + @PROF(()) + @CHA) else (#2 + @CHA) end)</function>
-	<function name="CONCHECK">#1 + ":" + (#2 + @CON)</function>
-	<function name="DEXCHECK">#1 + ":" + (#2 + @DEX)</function>
-	<function name="INTCHECK">#1 + ":" + (#2 + @INT)</function>
-	<function name="STRCHECK">#1 + ":" + (if #1 = "Athletics" then (#2 + @PROF(()) + @STR) else (#2 + @STR) end)</function>
-	<function name="WISCHECK">#1 + ":" + (if #1 = "WIS Save" ∨ #1 = "Insight" ∨ #1 = "Survival" then (#2 + @PROF(()) + @WIS) else (#2 + @WIS) end)</function>
+	<function name="CHACHECK">#1 + ":" + (if #1 = "Intimidation" then (#2 + @PROF(()) + @CHA) elif #1 = "CHA Save" then (#2 + @PROF(()) + (2 x @CHA)) else (#2 + @CHA) end)</function>
+	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON + @CHA) else (#2 + @CON))</function>
+	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" then (#2 + @DEX + @CHA) else (#2 + @DEX))</function>
+	<function name="INTCHECK">#1 + ":" + (if #1 = "INT Save" then (#2 + @INT + @CHA) else (#2 + @INT))</function>
+	<function name="STRCHECK">#1 + ":" + (if #1 = "Athletics" then (#2 + @PROF(()) + @STR) elif #1 = "STR Save" then (#2 + @STR + @CHA) else (#2 + @STR) end)</function>
+	<function name="WISCHECK">#1 + ":" + (if #1 = "Insight" ∨ #1 = "Survival" then (#2 + @PROF(()) + @WIS) elif #1 = "WIS Save" then (#2 + @PROF(()) + @WIS + @CHA) else (#2 + @WIS) end)</function>
 	<dicebar title="(Dice Bar)">
 		<die>D4</die>
 		<die>D6</die>
