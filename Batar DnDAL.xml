@@ -17,9 +17,11 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ← (if #1 = 1 then @DICECALC(("SD",20)) else @DICECALC(("SD",10)) end). "Extra Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())</formula>
+		<formula>#9 ← (if #2 = "Precision Attack" then @DICECALC(("SD",10)) elif #1 = 1 then @DICECALC(("SD",20)) else @DICECALC(("SD",10)) end). 
+		(if #2 = "Precision Attack" then "Bonus to the attack:" else "Extra Damage:" end) + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + (if #2 = "Menacing Attack" ∨ #2 = "Goading Attack" then "WIS" + @SAVEDC(()) elif #2 = "Pushing Attack" ∨ #2 = "Trip Attack" then "STR" + @SAVEDC(()) else "" end) + (if #2 = "Menacing Attack" then "Target frightnened until end of your next turn" elif #2 = "Goading Attack" then "Target's attacks not including you are at disadvantage until end of your next turn" elif #2 = "Pushing Attack" then "Large or smaller target pushed up 15' away" elif #2 = "Trip Attack" then "Large or smaller target falls prone" else "" end)</formula>
 		<name>Superiority Die</name>
 		<parameter style="bool" name="Crit" default="1"/>
+		<parameter style="enum" name="Maneuver" default="Menacing Attack" enums="Goading Attack,Menacing Attack,Precision Attack,Pushing Attack,Trip Attack"/>
 	</roll>
 	<roll>
 		<formula>"HP Healed:" + (d10 + @FIGHTERLVL)
@@ -46,16 +48,15 @@
 		<parameter style="enum" name="Stat" default="STR Check" enums="STR Check,DEX Check,CON Check,INT Check,WIS Check,CHA Check"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
-		
 	</roll>
 	<!--User Globals-->
 	<variable kind="number" name="BOWBONUS">2</variable>
 	<variable kind="number" name="CHA">1</variable>
 	<variable kind="number" name="CON">2</variable>
 	<variable kind="number" name="DEX">5</variable>
-	<variable kind="number" name="FIGHTERLVL">6</variable>
+	<variable kind="number" name="FIGHTERLVL">7</variable>
 	<variable kind="number" name="INT">-1</variable>
-	<variable kind="number" name="LVL">8</variable>
+	<variable kind="number" name="LVL">9</variable>
 	<variable kind="number" name="ROGUELVL">2</variable>
 	<variable kind="number" name="STR">0</variable>
 	<variable kind="number" name="WIS">2</variable>
