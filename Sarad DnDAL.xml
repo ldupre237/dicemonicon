@@ -2,21 +2,19 @@
 <gameroom inherit="Default" name="Sarad DnDAL">
 	<!--Favorite Rolls-->
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4) end). @DEXCHECK(("Initiative",@X))
-		</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4) end). @DEXCHECK(("Initiative",@X))</formula>
 		<name>Initiative</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4) end). @STRCHECK(("Shield Bash",@X))
-		</formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #2 = 0 then @X else (@X + Wd4) end). @STRCHECK(("Shield Bash",@X))</formula>
 		<name>Shield Bash</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 		<roll>
-		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Slashing Damage--> @SDMG ← (if #2 = "Axe" then (#9d8 + @STR) elif #2 = "Longsword" then (#9d8 + @STR + @SWORDBONUS) else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Longbow" then (#9d8 + @DEX) else 0 end). <!--Riposte--> @SDMG ← (if #4 = 1 ∧ (#2 = "Axe"  ∨ #2 = "Longsword") then #9 ← (@DICECALC(("Riposte",@X))). @Y ← (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end). (@Y + @SDMG) else @SDMG end). <!--Fire Damage--> @FDMG ← (if #2 = "Axe" then #9 ←(@DICECALC(("FT",@X))). #9Od6 else 0 end). @FDMG ← (if #3 = 1 then #9 ←(@DICECALC(("HB",@X))). (#9Od6 + @FDMG) else @FDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@SDMG,@PDMG,@FDMG)) end </formula>
+		<formula>@X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Slashing Damage--> @SDMG ← (if #2 = "Axe" then (#9d8 + @STR) elif #2 = "Longsword" then (#9d8 + @STR + @SWORDBONUS) else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Longbow" then (#9d8 + @DEX) else 0 end). <!--Riposte--> @SDMG ← (if #4 = 1 ∧ (#2 = "Axe"  ∨ #2 = "Longsword") then #9 ← (@DICECALC(("Riposte",@X))). @Y ← (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end). (@Y + @SDMG) else @SDMG end). <!--Fire Damage--> @FDMG ← (if #2 = "Axe" then #9 ←(@DICECALC(("FT",@X))). #9Od6 else 0 end). @FDMG ← (if #3 = 1 then #9 ←(@DICECALC(("HB",@X))). (#9Od6 + @FDMG) else @FDMG end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((@SDMG,@PDMG,@FDMG)) end</formula>
 		<name>Weapon Attacks</name>
 		<parameter name="Roll" style="enum" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
 		<parameter name="Weapon" style="enum" default="Axe" enums="Axe,Longsword,Longbow"/>
@@ -25,42 +23,37 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ← (if #1 = 1 then @DICECALC(("Superiority Die",20)) else @DICECALC(("Superiority Die",10)) end). "Slashing:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + @SAVEDC(())
-		</formula>
-		<name>Superiority Die</name>
-		<parameter style="bool" name="Crit" default="1"/>
-	</roll>
+      <formula>#9 ← (if #1 = 1 then @DICECALC(("SD",20)) else @DICECALC(("SD",10)) end). "Damage:" + (if @FIGHTERLVL &lt; 10 then #9d8 elif @FIGHTERLVL &lt; 18 then #9d10 else #9d12 end) + (if #2 = "Goading Attack" ∨ #2 = "Menacing Attack" then "WIS" + @SAVEDC(()) elif #2 = "Disarming Attack" ∨ #2 = "Trip Attack" then "STR" + @SAVEDC(()) else "" end) + @RIDER((#2))</formula>
+      <name>Superiority Die</name>
+      <parameter style="bool" name="Crit" default="1"/>
+      <parameter style="enum" name="Maneuver" default="Menacing Attack" enums="Disarming Attack,Distracting Strike,Goading Attack,Lunging Attack,Maneuvering Attack,Menacing Attack,Trip Attack"/>
+   </roll>
 	<roll>
-		<formula>if #1 = "Undead" then "Radiant:" + Yd6 if #1 = "Prismatic Spray" then (@X ← d8. (if @X = 1 then "(Red) Fire:" + 10Rd6 elif @X = 2 then "(Orange) Acid:" + 10Od6 elif @X = 3 then "(Yellow) Lightning:" + 10Yd6 elif @X = 4 then "(Green) Poison:" + 10Gd6 elif @X = 5 then "(Blue) Cold:" + 10Bd6 elif @X = 6 then "(Indigo) Restrained!" elif @X = 7 then "(Violet) Blinded!" else "Target struck by 2 rays!" end) + "DEX Save DC: 18 Half") else "Fire:" + (if #1 = "Fireball" then 8Od6 else 5Od8 end) + "DEX Save DC: 18 Half"
-		</formula>
+		<formula>if #1 = "Undead" then "Radiant:" + Yd6 if #1 = "Prismatic Spray" then (@X ← d8. (if @X = 1 then "(Red) Fire:" + 10Rd6 elif @X = 2 then "(Orange) Acid:" + 10Od6 elif @X = 3 then "(Yellow) Lightning:" + 10Yd6 elif @X = 4 then "(Green) Poison:" + 10Gd6 elif @X = 5 then "(Blue) Cold:" + 10Bd6 elif @X = 6 then "(Indigo) Restrained!" elif @X = 7 then "(Violet) Blinded!" else "Target struck by 2 rays!" end) + "DEX Save DC: 18 Half") else "Fire:" + (if #1 = "Fireball" then 8Od6 else 5Od8 end) + "DEX Save DC: 18 Half"</formula>
 		<name>Helm of Brilliance</name>
 		<parameter name="Spell" style="enum" default="Undead" enums="Undead,Fireball,Prismatic Spray,Wall of Fire"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>"HP Healed:" + (d10 + @FIGHTERLVL)
-		</formula>
+		<formula>"HP Healed:" + (d10 + @FIGHTERLVL)</formula>
 		<name>Second Wind</name>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "Athletics" then @STRCHECK((#1,@X)) elif #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then @DEXCHECK((#1,@X)) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "Investigation" ∨ #1 ="Nature" ∨ #1 = "Religion" then @INTCHECK((#1,@X)) elif #1 = "Animal Handling" ∨ #1 = "Insight" ∨ #1 = "Medicine" ∨ #1 ="Perception" ∨ #1 = "Survival" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end
-		</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "Athletics" then @STRCHECK((#1,@X)) elif #1 = "Acrobatics" ∨ #1 = "Sleight of Hand" ∨ #1 = "Stealth" ∨ #1 = "Thieves Tools" then @DEXCHECK((#1,@X)) elif #1 = "Arcana" ∨ #1 = "History" ∨ #1 = "Investigation" ∨ #1 ="Nature" ∨ #1 = "Religion" then @INTCHECK((#1,@X)) elif #1 = "Animal Handling" ∨ #1 = "Insight" ∨ #1 = "Medicine" ∨ #1 ="Perception" ∨ #1 = "Survival" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end</formula>
 		<name>Skills</name>
 		<parameter style="enum" name="Skills" default="Perception" enums="Acrobatics,Animal Handling,Arcana,Athletics,Deception,History,Insight,Intimidation,Investigation,Medicine,Nature,Perception,Performance,Persuasion,Religion,Sleight of Hand,Stealth,Survival,Thieves Tools"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>	
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "STR Save" then @STRCHECK((#1,@X)) elif #1 = "DEX Save" then @DEXCHECK((#1,@X)) elif #1 = "CON Save" then @CONCHECK((#1,@X)) elif #1 = "INT Save" then @INTCHECK((#1,@X)) elif #1 = "WIS Save" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end
-		</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "STR Save" then @STRCHECK((#1,@X)) elif #1 = "DEX Save" then @DEXCHECK((#1,@X)) elif #1 = "CON Save" then @CONCHECK((#1,@X)) elif #1 = "INT Save" then @INTCHECK((#1,@X)) elif #1 = "WIS Save" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end</formula>
 		<name>Saving Throws</name>
 		<parameter style="enum" name="Stat" default="STR Save" enums="STR Save,DEX Save,CON Save,INT Save,WIS Save,CHA Save"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "STR Check" then @STRCHECK((#1,@X)) elif #2 = "DEX Check" then @DEXCHECK((#1,@X)) elif #1 = "CON Check" then @CONCHECK((#1,@X)) elif #1 = "INT Check" then @INTCHECK((#1,@X)) elif #1 = "WIS Check" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end
-		</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "STR Check" then @STRCHECK((#1,@X)) elif #2 = "DEX Check" then @DEXCHECK((#1,@X)) elif #1 = "CON Check" then @CONCHECK((#1,@X)) elif #1 = "INT Check" then @INTCHECK((#1,@X)) elif #1 = "WIS Check" then @WISCHECK((#1,@X)) else @CHACHECK((#1,@X)) end</formula>
 		<name>Ability Checks</name>
 		<parameter style="enum" name="Stat" default="STR Check" enums="STR Check,DEX Check,CON Check,INT Check,WIS Check,CHA Check"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
@@ -92,6 +85,8 @@
 	<!--#1 = Attack Name, #2 = Roll/Level-->
 	<function name="DICECALC">if #1 = "FT" then @CRITCALC((#2,2)) else @CRITCALC((#2,1)) end</function>
 	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
+	<!--#1 = Attack-->
+   <function name="RIDER">if #1 = "Disarming Attack" then "target drops a held object of my choice to its feet on fail" elif #1 = "Distracting Strike" then "The next attack of an ally before my next turn has adv. against the creature" elif #1 = "Goading Attack" then "target has disadv. vs. other targets until the end of my next turn on fail" elif #1 = "Maneuvering Attack" then "Ally can use reaction to move half speed without opportunity attack from the target" elif #1 = "Menacing Attack" then "target is frightened of me until the end of my next turn on fail" elif #1 = "Trip Attack" then "large or smaller target is knocked prone" else "" end</function>
 	<!--#1 = Stat-->
 	<function name="SAVEDC">"Save DC:" + (8 + (@PROF(()) + @STR) end))</function>
 	<!--Ability Checks-->
