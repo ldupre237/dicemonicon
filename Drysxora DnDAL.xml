@@ -52,7 +52,7 @@
 		<parameter style="bool" name="Steed"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "STR Save" then @STRCHECK((#1,@X,#4)) elif #1 = "DEX Save" then @DEXCHECK((#1,@X,#4)) elif #1 = "CON Save" then @CONCHECK((#1,@X,#4)) elif #1 = "INT Save" then @INTCHECK((#1,@X,#4)) elif #1 = "WIS Save" then @WISCHECK((#1,@X,#4)) else @CHACHECK((#1,@X,#4)) end</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then (@X + @CHA) else (@X + Wd4 +@CHA) end). if #1 = "STR Save" then @STRCHECK((#1,@X,#4)) elif #1 = "DEX Save" then @DEXCHECK((#1,@X,#4)) elif #1 = "CON Save" then @CONCHECK((#1,@X,#4)) elif #1 = "INT Save" then @INTCHECK((#1,@X,#4)) elif #1 = "WIS Save" then @WISCHECK((#1,@X,#4)) else @CHACHECK((#1,@X,#4)) end</formula>
 		<name>Saving Throws</name>
 		<parameter style="enum" name="Stat" default="STR Save" enums="STR Save,DEX Save,CON Save,INT Save,WIS Save,CHA Save"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
@@ -60,15 +60,14 @@
 		<parameter style="bool" name="Steed"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #4 = 0 then if #3 = 1 then (@X + @STCON + @CHA) else (@X + @CON + @CHA) end else if #3 = 1 then (@X + @STCON + @CHA + Wd4) else (@X + @CON + @CHA + Wd4) end end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S ≤ @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then (@X + @CON + @CHA) else (@X + @CON + @CHA + Wd4) end). @S ← (if (#1 / 2) &lt; 10 then 10 else (#1 / 2) end). "Conc. Check Result:" + (if @S ≤ @X then "Passed" else "Failed" end) + "(" + @X + ")"</formula>
 		<name>Concentration Check</name>
 		<parameter style="number" default="20" name="Damage Amount"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
-		<parameter style="bool" name="Steed"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "STR Check" then @STRCHECK((#1,@X,#4)) elif #2 = "DEX Check" then @DEXCHECK((#1,@X,#4)) elif #1 = "CON Check" then @CONCHECK((#1,@X,#4)) elif #1 = "INT Check" then @INTCHECK((#1,@X,#4)) elif #1 = "WIS Check" then @WISCHECK((#1,@X,#4)) else @CHACHECK((#1,@X,#4)) end</formula>
+		<formula>@X ← (if #2 = "Basic" then d20 elif #2 = "Advantage" then 2d20H1 else 2d20L1 end). @X ← (if #3 = 0 then @X else (@X + Wd4) end). if #1 = "STR Check" then @STRCHECK((#1,@X,#4)) elif #1 = "DEX Check" then @DEXCHECK((#1,@X,#4)) elif #1 = "CON Check" then @CONCHECK((#1,@X,#4)) elif #1 = "INT Check" then @INTCHECK((#1,@X,#4)) elif #1 = "WIS Check" then @WISCHECK((#1,@X,#4)) else @CHACHECK(("#1",@X,#4)) end</formula>
 		<name>Ability Checks</name>
 		<parameter style="enum" name="Stat" default="STR Check" enums="STR Check,DEX Check,CON Check,INT Check,WIS Check,CHA Check"/>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage"/>
@@ -116,12 +115,13 @@
 	<!--#1 = Spell Level, #2 = Fiend/Undead #3 = Crit -->
 	<function name="SMITE">#9 ← (if #1 &gt; 4 then if #2 = 1 then 6 else 5 end else if #2 = 1 then (#1 + 2) else (#1 + 1) end end). if #3 = 1 then @CRITCALC((20,#9)) else @CRITCALC((10,#9)) end</function>
 	<!--Ability Checks-->
-	<function name="CHACHECK">#1 + ":" + (if #3 = 1 then (#2 + @STCHA) elif #1 = "CHA Save" then (#2 + @PROF(()) + (2 x @CHA)) elif #1 = "Intimidation" ∨ #1 = "Persuasion" then (#2 + @PROF(()) + @CHA) else (#2 + @CHA) end)</function>
-	<function name="CONCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STCON) elif #1 = "CON Save" then (#2 + @CON + @CHA) else (#2 + @CON) end)</function>
- 	<function name="DEXCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STDEX) elif #1 = "DEX Save" then (#2 + @DEX + @CHA) else (#2 + @DEX) end)</function>
-	<function name="STRCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STSTR) elif #1 = "STR Save" then (#2 + @STR + @CHA) elif #1 = "Athletics" then (#2 + @PROF(()) + @STR ) else (#2 + @STR) end)</function>
-	<function name="INTCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STINT) elif #1 = "INT Save" then (#2 + @INT + @CHA) else (#2 + @INT) end)</function>
-	<function name="WISCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STWIS) elif #1 = "WIS Save" then (#2 + @PROF(()) + @WIS + @CHA) elif #1 = "Insight" then (#2 + @WIS + @PROF else (#2 + @WIS) end)</function>
+	<!--#1 = Ability, #2 = Roll, #3 = Character -->
+	<function name="CHACHECK">#1 + ":" + (if #3 = 1 then (#2 + @STCHA) elif #1 = "CHA Save" then (#2 + @PROF(()) + @CHA) elif #1 = "Intimidation" ∨ #1 = "Persuasion" then (#2 + @PROF(()) + @CHA) else (#2 + @CHA) end)</function>
+	<function name="CONCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STCON) else (#2 + @CON) end)</function>
+ 	<function name="DEXCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STDEX) else (#2 + @DEX) end)</function>
+	<function name="STRCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STSTR) elif #1 = "Athletics" then (#2 + @PROF(()) + @STR) else (#2 + @STR) end)</function>
+	<function name="INTCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STINT) else (#2 + @INT) end)</function>
+	<function name="WISCHECK">#1 + ":" + (if #3 = 1 then (#2 + @STWIS) elif #1 = "WIS Save" then (#2 + @PROF(()) + @WIS) elif #1 = "Insight" then (#2 + @WIS + @PROF else (#2 + @WIS) end)</function>
 	<!--Current Effects-->
 	<dicebar title="(Bar)">
 		<die>D20</die>
