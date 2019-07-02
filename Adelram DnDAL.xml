@@ -9,11 +9,12 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>if #2 = "Toll the Dead" then #9 ← (@DICECALC((#2))). "Necrotic:" + (if #3 = 1 then #9Kd12 else #9Kd8 end) + "WIS" + @SAVEDC(()) + "Neg" else @X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else #9 ← (@DICECALC((#2,@X))). <!--Fire Damage--> @FDMG ← (if #2 = "Firebolt" then #9Od10 else 0 end). <!--Lightning Damage--> @LDMG ← (if #2 = "Shocking Grasp" then #9Bd8 else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Dagger" then (#9d4 + @DEX + @DAGGERBONUS) else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #4 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((#2,@FDMG,@LDMG,@PDMG)) end end</formula>
+		<formula>if #2 = "Toll the Dead" then #9 ← (@DICECALC((#2))). "Necrotic:" + (if #3 = 1 then #9Kd12 else #9Kd8 end) + "WIS" + @SAVEDC(()) + "Neg" else @X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else #9 ← (@DICECALC((#2,@X))). <!--Cold Damage--> @CDMG ← (if #2 = "Ice Knife" then #8 ← (@DICECALC(("Ice Knife Rider",#4))). #8Cd6 else 0 end). <!--Fire Damage--> @FDMG ← (if #2 = "Firebolt" then #9Od10 else 0 end). <!--Lightning Damage--> @LDMG ← (if #2 = "Shocking Grasp" then #9Bd8 else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Dagger" then (#9d4 + @DEX + @DAGGERBONUS) elif #2 = "Ice Knife" then #9Cd10 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((#2,@CDMG,@FDMG,@LDMG,@PDMG)) end end</formula>
 		<name>Attacks</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
-		<parameter style="enum" name="Attack" default="Toll the Dead" enums="Dagger,Firebolt,Shocking Grasp,Toll the Dead"/>
+		<parameter style="enum" name="Attack" default="Toll the Dead" enums="Dagger,Firebolt,Ice Knife,Shocking Grasp,Toll the Dead"/>
 		<parameter style="bool" default="1" name="Injured?"/>
+		<parameter style="number" default="1" name="Spell Level"/>
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
@@ -60,13 +61,13 @@
 	<variable kind="number" name="INT">3</variable>
 	<variable kind="number" name="DAGGERBONUS">0</variable>
 	<variable kind="number" name="FOCUSBONUS">0</variable>
-	<variable kind="number" name="LVL">1</variable>
-	<variable kind="number" name="WIZARDLVL">1</variable>
+	<variable kind="number" name="LVL">2</variable>
+	<variable kind="number" name="WIZARDLVL">2</variable>
 	<variable kind="number" name="STR">-1</variable>
 	<variable kind="number" name="WIS">2</variable>
 	<!--User Functions-->
-	<!--#1 = Attack, #2 = Fire Damage #3 = Lightning Damage #4 = Piercing Damage-->
-	<function name="ATKDMG">(if #2 &gt; 0 then "Fire:" + #2 else "" end) + (if #3 &gt; 0 then "Lightning:" + #3 else "" end) + (if #3 &gt; 0 then "Piercing:" + #4 else "" end) + @RIDER((#1))</function>
+	<!--#1 = Attack, #2 = Cold Damage #3 = Fire Damage #4 = Lightning Damage, #5 = Piercing Damage-->
+	<function name="ATKDMG"> (if #3 &gt; 0 then "Fire:" + #3 else "" end) + (if #4 &gt; 0 then "Lightning:" + #4 else "" end) + (if #5 &gt; 0 then "Piercing:" + #5 else "" end) + (if #2 &gt; 0 then "Cold:" + #2 else "" end) + @RIDER((#1))</function>
 	<!--#1 = Attack, #2 = Roll-->
 	<function name="ATKROLL">"ATK:" + (if #1 = "Dagger" then (#2 + @PROF(()) + @DEX + @DAGGERBONUS) else <!--Spell Attacks-->(#2 + @PROF(()) + @INT + @FOCUSBONUS) end)</function>
 	<!--#1 = Roll,#2 = Value-->
@@ -74,10 +75,10 @@
 	<!--#1 = Attack, #2 = Roll-->
 	<function name="CRITICAL">if #2 = 1 then "Critical Miss!" + (if #1 = "Dagger" then "\$Swoosh$" else "\$Bah$" end) else "Crit!" + (if #1 = "Dagger" then "\$Clang$" else "\$Gong$" end) end</function>
 	<!--#1 = Attack, #2 = Roll/Level-->
-	<function name="DICECALC">if #1 = "Dagger" then @CRITCALC((#2,1)) elif #1 = "Magic Missile" then if #2 &gt; 8 then 11 else (2 + #2) end elif #1 = "Sleep" then if #2 &gt; 8 then 21 else (3 + (2 x #2)) end elif #1 = "Toll the Dead" then if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end else <!--Attack Cantrips--> if @LVL &lt; 5 then @CRITCALC((#2,1)) elif @LVL &lt; 11 then @CRITCALC((#2,2)) elif @LVL &lt; 17 then @CRITCALC((#2,3)) else @CRITCALC((#2,4)) end end </function>
+	<function name="DICECALC">if #1 = "Dagger" ∨ #1 = "Ice Knife" then @CRITCALC((#2,1)) elif #1 = "Ice Knife Rider" then if #2 &gt; 8 then 10 else (#2 + 1) end elif #1 = "Magic Missile" then if #2 &gt; 8 then 11 else (2 + #2) end elif #1 = "Sleep" then if #2 &gt; 8 then 21 else (3 + (2 x #2)) end elif #1 = "Toll the Dead" then if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end else <!--Attack Cantrips--> if @LVL &lt; 5 then @CRITCALC((#2,1)) elif @LVL &lt; 11 then @CRITCALC((#2,2)) elif @LVL &lt; 17 then @CRITCALC((#2,3)) else @CRITCALC((#2,4)) end end </function>
 	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
 	<!--#1 = Attack-->
-	<function name="RIDER">if #1 = "Healer Feat" then "+ total HD of target" elif #1 = "Shocking Grasp" then "Target cannot take reactions until the end of your next turn" else "" end</function>
+	<function name="RIDER">if #1 = "Healer Feat" then "+ total HD of target" elif #1 = "Shocking Grasp" then "Target cannot take reactions until the end of your next turn" elif #1 = "Ice Knife" then "to target and all creatures within 5'. DEX" + @SAVEDC(()) + "(Half)" else "" end</function>
 	<!--#1 = Stat-->
 	<function name="SAVEDC">"Save DC:" + (8 + (@PROF(()) + @INT) end)</function>
 	<!--Ability Checks-->
