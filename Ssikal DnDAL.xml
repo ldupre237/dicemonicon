@@ -9,10 +9,10 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<roll>
-		<formula>if #2 = "Poison Spray" then #9 ←(@DICECALC(("Cantrip",10))). "Poison:" + #9Gd12 + "CON" + @SAVEDC(("CHA")) + "Neg" else @X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Slashing Damage--> @SDMG ← (if #2 = "Macuahuitl" then (#9d8 + @STR + @SWORDBONUS + 2) else 0 end). <!--Piercing Damage--> @PDMG ← (if #2 = "Spear" then (#9d6 + @STR + @SPEARBONUS + 2) else 0 end). <!--Bashing Damage--> @BDMG ← (if #2 = "Spear Butt" then (#9d4 + @STR + @SPEARBONUS + 2) else 0 end). <!--Radiant Damage--> @RDMG ← (if #3 = "Divine Favor" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #9 ← (@DICECALC(("Divine Favor",@X))). #9Yd4 elif #3 = "Branding Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #9 ← (@DICECALC(("Branding Smite",@X,#4))). #9Yd6 else 0 end). <!--Fire Damage--> @FDMG ← (if #3 = "Searing Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #9 ← (@DICECALC(("Searing Smite",@X,#4))). #9Od6 else 0 end). <!--Thunder Damage--> @TDMG ← (if #3 = "Thunderous Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #9 ← (@DICECALC(("Thunderous Smite",@X))). #9Ad6 else 0 end). <!--Psychic Damage--> @PSDMG ← (if #3 = "Wrathful Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #9 ← (@DICECALC(("Wrathful Smite",@X))). #9Md6 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((#3,@SDMG,@PDMG,@BDMG,@RDMG,@FDMG,@TDMG,@PSDMG)) end end</formula>
+		<formula>if #2 = "Attack" then #9 ←(@DICECALC((#2,10))). "Poison:" + #9Gd12 + "CON" + @SAVEDC(("CHA")) + "Neg" else @X ← (if #1 = "Basic" then d20 elif #1 = "Advantage" then 2d20H1 elif #1 = "Disadvantage" then 2d20L1 else 20 end). if @X = 1 then @CRITICAL((#2,@X)) else <!--Dice Calculation--> #9 ←(@DICECALC((#2,@X))). <!--Acid Damage--> @ADMG ← (0). <!--Bludgeoning Damage--> @BDMG ← (if #2 = "Spear Butt" then (#9d4 + @STR + @SPEARBONUS + 2) else 0 end). <!--Cold Damage--> @CDMG ← (0). <!--Fire Damage--> (if #3 = "Searing Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #8 ← (@DICECALC(("Searing Smite",@X,#4))). #8Od6 else 0 end). <!--Force Damage--> @FODMG ← (0). <!--Lightning Damage--> @LDMG ← (0). <!--Necrotic Damage--> @NDMG ← (0). <!--Piercing Damage--> @PDMG ← (if #2 = "Spear" then (#9d6 + @STR + @SPEARBONUS + 2) else 0 end). <!--Poison Damage--> @PODMG ← (0). <!--Psychic Damage--> @PSDMG ← (if #3 = "Wrathful Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #8 ← (@DICECALC(("Wrathful Smite",@X))). #8Md6 else 0 end). <!--Radiant Damage--> @RDMG ← (if #3 = "Divine Favor" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #8 ← (@DICECALC(("Divine Favor",@X))). #8Yd4 elif #3 = "Branding Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #8 ← (@DICECALC(("Branding Smite",@X,#4))). #8Yd6 else 0 end). <!--Slashing Damage--> @SDMG ← (if #2 = "Macuahuitl" then (#9d8 + @STR + @SWORDBONUS + 2) else 0 end). <!--Thunder Damage--> @TDMG ← (if #3 = "Thunderous Smite" ∧ (#2 = "Macuahuitl" ∨ #2 = "Spear" ∨ #2 = "Spear Butt") then #9 ← (@DICECALC(("Thunderous Smite",@X))). #9Ad6 else 0 end). <!--Attack Roll--> (if @X = 20 then @CRITICAL((#2,@X)) else <!--Bless--> @X ← (if #5 = 0 then @X else (@X + Wd4) end). @ATKROLL((#2,@X)) end) + @ATKDMG((#2,#3,@ADMG,@BDMG,@CDMG,@FDMG,@FODMG,@LDMG,@NDMG,@PDMG,@PODMG,@PSDMG,@RDMG,@SDMG,@TDMG)) end end</formula>
 		<name>Attacks</name>
 		<parameter style="enum" name="Roll" default="Basic" enums="Basic,Advantage,Disadvantage,CritHit"/>
-		<parameter style="enum" name="Weapon" default="Spear" enums="Macuahuitl,Spear,Spear Butt,Poison Spray"/>
+		<parameter style="enum" name="Attack" default="Spear" enums="Macuahuitl,Spear,Spear Butt,Poison Spray"/>
 		<parameter style="enum" name="Damage Addon" default="None" enums="Branding Smite,Divine Favor,None,Searing Smite,Thunderous Smite,Wrathful Smite"/>
 		<parameter style="number" default="1" name="Spell Level"/>
 		<parameter style="bool" name="Bless"/>
@@ -56,27 +56,27 @@
 		<parameter style="bool" name="Guidance"/>
 	</roll>
 	<!--User Globals-->
-	<variable kind="number" name="CHA">3</variable>
-	<variable kind="number" name="CON">1</variable>
+	<variable kind="number" name="CHA">4</variable>
+	<variable kind="number" name="CON">4</variable>
 	<variable kind="number" name="DEX">0</variable>
 	<variable kind="number" name="INT">-1</variable>
-	<variable kind="number" name="LVL">7</variable>
-	<variable kind="number" name="PALADINLVL">7</variable>
+	<variable kind="number" name="LVL">8</variable>
+	<variable kind="number" name="PALADINLVL">8</variable>
 	<variable kind="number" name="STR">4</variable>
 	<variable kind="number" name="SPEARBONUS">1</variable>
 	<variable kind="number" name="SWORDBONUS">0</variable>
 	<variable kind="number" name="WIS">1</variable>
 	<!--User Functions-->
-	<!--#1 = Damage Addon, #2 = Slashing Damage #3 = Piercing Damage, #4 = Bashing Damage, #5 = Radiant Damage, #6 = Fire Damage, #7 = Thunder Damage, #8 = Psychic Damage-->
-	<function name="ATKDMG">(if #2 &gt; 0 then "Slashing:" + #2 else "" end) + (if #3 &gt; 0 then "Piercing:" + #3 else "" end) + (if #4 &gt; 0 then "Bashing:" + #4 else "" end) + (if #5 &gt; 0 then "Radiant:" + #5 else "" end) + (if #6 &gt; 0 then "Fire:" + #6 else "" end) + (if #7 &gt; 0 then "Thunder:" + #7 else "" end) + (if #8 &gt; 0 then "Psychic:" + #8 else "" end) + (if #5 &gt; 0 ∨ #6 &gt; 0 ∨ #7 &gt; 0 ∨ #8 &gt; 0 then "Total:" + (#2 + #3 + #4 + #5 + #6 + #7 +#8) else "" end) + @RIDER((#1))</function>
-	<!--#1 = Weapon, #2 = Roll-->
+	<!--#1 = Attack, #2 = Damage Addon, #3 = Acid Damage, #4 = Bludgeoning Damage, #5 = Cold Damage, #6 = Fire Damage, #7 = Force Damage, #8 = Lightning Damage, #9 = Necrotic Damage, #10 = Piercing Damage, #11 = Poison Damage, #12 = Psychic Damage, #13 = Radiant Damage, #14 = Slashing Damage, #15 = Thunder Damage-->
+	<function name="ATKDMG">(if #3 &gt; 0 then "Acid:" + #3 else "" end) + (if #4 &gt; 0 then "Bludgeoning:" + #4 else "" end) + (if #5 &gt; 0 then "Cold:" + #5 else "" end) + (if #6 &gt; 0 then "Fire:" + #6 else "" end) + (if #7 &gt; 0 then "Force:" + #7 else "" end) + (if #8 &gt; 0 then "Lightning:" + #8 else "" end) + (if #9 &gt; 0 then "Necrotic:" + #9 else "" end) + (if #10 &gt; 0 then "Piercing:" + #10 else "" end) + (if #11 &gt; 0 then "Poison:" + #11 else "" end) + (if #12 &gt; 0 then "Psychic:" + #12 else "" end) + (if #13 &gt; 0 then "Radiant:" + #13 else "" end) + (if #14 &gt; 0 then "Slashing:" + #14 else "" end) + (if #15 &gt; 0 then "Thunder:" + #15 else "" end) + (if (#4 &gt; 0 ∨ #10 &gt; 0 ∨ #14 &gt; 0) ∧ (#3 &gt; 0 ∨ #5 &gt; 0 ∨ #6 &gt; 0 ∨ #7 &gt; 0 ∨ #8 &gt; 0 ∨ #9 &gt; 0 ∨ #11 &gt; 0 ∨ #12 &gt; 0 ∨ #13 &gt; 0 ∨ #15 &gt; 0) then "Total:" + (#3 + #4 + #5 + #6 + #7 + #8 + #9 + #10 + #11 + #12 + #13 + #14 + #15) else "" end) + @RIDER((#2))</function>
+	<!--#1 = Attack, #2 = Roll-->
 	<function name="ATKROLL">"ATK:" + (if #1 = "Macuahuitl" then (#2 + @STR + @PROF(()) + @SWORDBONUS) else (#2 + @STR + @PROF(()) + @SPEARBONUS) end)</function>
 	<!--#1 = Roll,#2 = Value-->
 	<function name="CRITCALC">if #1 = 20 then (2 x #2) else #2 end</function>
-	<!--#1 = Roll-->
-	<function name="CRITICAL">if #1 = 1 then "Critical Miss!" + "\$Swoosh$" else "Crit!" + "\$Clang$" end</function>
+	<!--#1 = Attack, #2 = Roll-->
+	<function name="CRITICAL">if #2 = 1 then "Critical Miss!" + (if #1 = "Spell" then "\$Bah$" else "\$Swoosh$" end) else "Crit!" + (if #1 = "Spell" then "\$Gong$" else "\$Clang$" end) end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level, #3 = Spell Level-->
-	<function name="DICECALC">if #1 = "Thunderous Smite" then @CRITCALC((#2,2)) elif #1 = "Moonbeam" then if #2 &gt; 4 then 5 elif #2 &lt; 3 then 2 else #2 end elif #1 = "Branding Smite" then if #3 &gt; 4 then @CRITCALC((#2,5)) elif #3 &lt; 3 then @CRITCALC((#2,2)) else @CRITCALC((#2,#3)) end elif #1 = "Cantrip" then if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end elif #1 = "Searing Smite" then if #3 &gt; 4 then @CRITCALC((#2,5)) else @CRITCALC((#2,#3)) end else @CRITCALC((#2,1)) end</function>
+	<function name="DICECALC">if #1 = "Branding Smite" then if #3 &gt; 4 then @CRITCALC((#2,5)) elif #3 &lt; 3 then @CRITCALC((#2,2)) else @CRITCALC((#2,#3)) end elif #1 = "Moonbeam" then if #2 &gt; 4 then 5 elif #2 &lt; 3 then 2 else #2 end elif #1 = "Poison Spray" then if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end elif #1 = "Searing Smite" then if #3 &gt; 4 then @CRITCALC((#2,5)) else @CRITCALC((#2,#3)) end elif #1 = "Thunderous Smite" then @CRITCALC((#2,2)) else @CRITCALC((#2,1)) end</function>
 	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
 	<!--#1 = Damage Addon-->
 	<function name="RIDER">@DC ←(@SAVEDC(("CHA"))). (if #1 = "Searing Smite" then "CON" + @DC + "or catch fire (d6 at start of turn)" elif #1 = "Branding Smite" then "target cannot be invisible" elif #1 = "Thunderous Smite" then "STR" + @DC + "or pushed 10'" elif #1 = "Wrathful Smite" then "WIS" + @DC + "or frightened (action to save again)" else "" end)</function>
@@ -87,9 +87,9 @@
 	<!--Ability Checks-->
 	<!--#1 = Ability, #2 = Roll-->
 	<function name="CHACHECK">#1 + ":" + (if #1 = "Intimidation" then (#2 + @PROF(()) + @CHA) elif #1 = "CHA Save" then (#2 + @PROF(()) + (2 x @CHA)) else (#2 + @CHA) end)</function>
-	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON + @CHA) else (#2 + @CON))</function>
-	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" then (#2 + @DEX + @CHA) else (#2 + @DEX))</function>
-	<function name="INTCHECK">#1 + ":" + (if #1 = "INT Save" then (#2 + @INT + @CHA) else (#2 + @INT))</function>
+	<function name="CONCHECK">#1 + ":" + (if #1 = "CON Save" then (#2 + @CON + @CHA) else (#2 + @CON) end)</function>
+	<function name="DEXCHECK">#1 + ":" + (if #1 = "DEX Save" then (#2 + @DEX + @CHA) else (#2 + @DEX) end)</function>
+	<function name="INTCHECK">#1 + ":" + (if #1 = "INT Save" then (#2 + @INT + @CHA) else (#2 + @INT) end)</function>
 	<function name="STRCHECK">#1 + ":" + (if #1 = "Athletics" then (#2 + @PROF(()) + @STR) elif #1 = "STR Save" then (#2 + @STR + @CHA) else (#2 + @STR) end)</function>
 	<function name="WISCHECK">#1 + ":" + (if #1 = "Insight" ∨ #1 = "Survival" then (#2 + @PROF(()) + @WIS) elif #1 = "WIS Save" then (#2 + @PROF(()) + @WIS + @CHA) else (#2 + @WIS) end)</function>
 	<dicebar title="(Dice Bar)">
