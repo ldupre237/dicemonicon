@@ -18,9 +18,9 @@
 		<parameter style="bool" name="Bless"/>
 	</roll>
 	<roll>
-		<formula>#9 ← (@DICECALC((#1,#2))). (if #1 = "Flaming Sphere" then "Fire:" + #9Od6 elif #1 = "Healer Feat" then "HP Restored:" + (Wd6 + 4) elif #1 = "Magic Missile" then @Y ← #9d4@ + 1. @Y, "Total:" + (sum((@Y))) else <!--Sleep--> "HP Affected:" + #9Cd8 end) + @RIDER((#1))</formula>
+		<formula>#9 ← (@DICECALC((#1,#2))). (if #1 = "Fireball" ∨ #1 = "Flaming Sphere" then "Fire:" + #9Od6 elif #1 = "Healer Feat" then "HP Restored:" + (Wd6 + 4) elif #1 = "Magic Missile" then @Y ← #9d4@ + 1. @Y, "Total:" + (sum((@Y))) else <!--Sleep--> "HP Affected:" + #9Cd8 end) + @RIDER((#1))</formula>
 		<name>Spells/Healing</name>
-		<parameter name="Spells/Healing" style="enum" default="Magic Missile" enums="Flaming Sphere,Healer Feat,Magic Missile,Sleep"/>
+		<parameter name="Spells/Healing" style="enum" default="Fireball" enums="Fireball,Flaming Sphere,Healer Feat,Magic Missile,Sleep"/>
 		<parameter style="number" default="1" name="Spell Level"/>
 	</roll>
 	<roll>
@@ -60,8 +60,8 @@
 	<variable kind="number" name="INT">4</variable>
 	<variable kind="number" name="DAGGERBONUS">0</variable>
 	<variable kind="number" name="FOCUSBONUS">0</variable>
-	<variable kind="number" name="LVL">4</variable>
-	<variable kind="number" name="WIZARDLVL">4</variable>
+	<variable kind="number" name="LVL">5</variable>
+	<variable kind="number" name="WIZARDLVL">5</variable>
 	<variable kind="number" name="STR">-1</variable>
 	<variable kind="number" name="WIS">2</variable>
 	<!--User Functions-->
@@ -74,10 +74,10 @@
 	<!--#1 = Attack, #2 = Roll-->
 	<function name="CRITICAL">if #2 = 1 then "Critical Miss!" + (if #1 = "Dagger" then "\$Swoosh$" else "\$Bah$" end) else "Crit!" + (if #1 = "Dagger" then "\$Clang$" else "\$Gong$" end) end</function>
 	<!--#1 = Attack Name, #2 = Roll/Level, #3 = Spell Level-->
-	<function name="DICECALC">if #1 = "Firebolt" ∨ #1 = "Shocking Grasp" then if @LVL &lt; 5 then @CRITCALC((#2,1)) elif @LVL &lt; 11 then @CRITCALC((#2,2)) elif @LVL &lt; 17 then @CRITCALC((#2,3)) else @CRITCALC((#2,4)) end elif #1 = "Flaming Sphere" then if #2 &lt; 2 then 2 if #2 &gt; 8 then 9 else #2 end elif #1 = "Ice Knife Rider" then if #2 &gt; 8 then 10 else (#2 + 1) end elif #1 = "Magic Missile" then if #2 &gt; 8 then 11 else (2 + #2) end elif #1 = "Toll the Dead" then if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end elif #1 = "Sleep" then if #2 &gt; 8 then 21 else (3 + (2 x #2)) end else @CRITCALC((#2,1)) end</function>
+	<function name="DICECALC">if #1 = "Fireball" then if #2 &lt; 4 then 8 elif #2 &gt; 8 then 14 else (#2 + 5) end elif #1 = "Firebolt" ∨ #1 = "Shocking Grasp" then if @LVL &lt; 5 then @CRITCALC((#2,1)) elif @LVL &lt; 11 then @CRITCALC((#2,2)) elif @LVL &lt; 17 then @CRITCALC((#2,3)) else @CRITCALC((#2,4)) end elif #1 = "Flaming Sphere" then if #2 &lt; 2 then 2 if #2 &gt; 8 then 9 else #2 end elif #1 = "Ice Knife Rider" then if #2 &gt; 8 then 10 else (#2 + 1) end elif #1 = "Magic Missile" then if #2 &gt; 8 then 11 else (2 + #2) end elif #1 = "Toll the Dead" then if @LVL &lt; 5 then 1 elif @LVL &lt; 11 then 2 elif @LVL &lt; 17 then 3 else 4 end elif #1 = "Sleep" then if #2 &gt; 8 then 21 else (3 + (2 x #2)) end else @CRITCALC((#2,1)) end</function>
 	<function name="PROF">if @LVL &lt; 5 then 2 elif @LVL &lt; 9 then 3 elif @LVL &lt; 12 then 4 elif @LVL &lt; 16 then 5 else 6 end</function>
-	<!--#1 = Attack-->
-	<function name="RIDER">if #1 = "Flaming Sphere" then "DEX" + @SAVEDC(()) + "(Half)" elif #1 = "Healer Feat" then "+ total HD of target" elif #1 = "Shocking Grasp" then "Target cannot take reactions until the end of your next turn" elif #1 = "Ice Knife" then "to target and all creatures within 5'. DEX" + @SAVEDC(()) + "(Half)" else "" end</function>
+		<!--#1 = Attack-->
+	<function name="RIDER">if #1 = "Fireball" ∨ #1 = "Flaming Sphere" then "DEX" + @SAVEDC(()) + "(Half)" elif #1 = "Healer Feat" then "+ total HD of target" elif #1 = "Shocking Grasp" then "Target cannot take reactions until the end of your next turn" elif #1 = "Ice Knife" then "to target and all creatures within 5'. DEX" + @SAVEDC(()) + "(Half)" else "" end</function>
 	<!--#1 = Stat-->
 	<function name="SAVEDC">"Save DC:" + (8 + (@PROF(()) + @INT) end))</function>
 	<!--Ability Checks-->
